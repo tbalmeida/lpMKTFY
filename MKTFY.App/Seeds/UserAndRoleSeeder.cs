@@ -16,6 +16,12 @@ namespace MKTFY.App.Seeds
             {
                 await roleManager.CreateAsync(new IdentityRole("administrator"));
             }
+            
+            roleResult = await roleManager.RoleExistsAsync("user");
+            if (!roleResult)
+            {
+                await roleManager.CreateAsync(new IdentityRole("user"));
+            }
 
             var userResult = await userManager.FindByNameAsync("thiago+admin@launchpadbyvog.com");
             if (userResult == null)
