@@ -1,0 +1,31 @@
+{
+    "AWSEBDockerrunVersion": "2",
+    "containerDefinitions": [
+        {
+            "name": "api",
+            "image": "357601261033.dkr.ecr.ca-central-1.amazonaws.com/lpb-mktfy:api",
+            "hostname": "api",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                }
+            ],
+            "memory": 900
+        },
+        {
+            "name": "auth",
+            "image": "357601261033.dkr.ecr.ca-central-1.amazonaws.com/lpb-mktfy:auth",
+            "hostname": "auth",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 8080,
+                    "containerPort": 80
+                }
+            ],
+            "memory": 900
+        }
+    ]
+}

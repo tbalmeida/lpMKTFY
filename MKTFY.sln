@@ -11,7 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKTFY.Models", "MKTFY.Model
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKTFY.App", "MKTFY.App\MKTFY.App.csproj", "{81518A43-CA4B-45E7-93BD-45994618B1F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MKTFY.Auth", "MKTFY.Auth\MKTFY.Auth.csproj", "{8E4CE774-C7E7-45C0-B2DD-EEA9468A9D28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKTFY.Auth", "MKTFY.Auth\MKTFY.Auth.csproj", "{8E4CE774-C7E7-45C0-B2DD-EEA9468A9D28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A50D18DC-70A8-4A2C-8E66-592887606F0E}"
+	ProjectSection(SolutionItems) = preProject
+		buildspec.api.yml = buildspec.api.yml
+		buildspec.auth.yml = buildspec.auth.yml
+		Dockerrun.aws.json = Dockerrun.aws.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
