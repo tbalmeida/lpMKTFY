@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  mktfy.api:
+    image: ${DOCKER_REGISTRY-}mktfyapi
+    container_name: "mktfy.api"
+    build:
+      context: .
+      dockerfile: MKTFY.Api/Dockerfile
+    ports:
+      - "25000:80"
+      - "25001:443"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
+      - Identity__Authority=http://mktfy.auth
+
+    depends_on:
+      - "mktfy.db"
+
+  mktfy.auth:
+    image: ${DOCKER_REGISTRY-}mktfyauth
+    container_name: "mktfy.auth"
+    build:
+      context: .
+      dockerfile: MKTFY.Auth/Dockerfile
+    ports:
+      - "24000:80"
+      - "24001:443"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
+      - Identity__Authority=http://mktfy.auth
+    depends_on:
+      - "mktfy.db"
+
+  mktfy.db:
+    restart: on-failure
+    image: "mdillon/postgis:11"
+    container_name: "mktfy.db"
+    environment:
+      - POSTGRES_USER=devdbuser
+      - POSTGRES_DB=devdb
+      - POSTGRES_PASSWORD=devdbpassword
+    volumes:
+      - launchpad-db:/var/lib/postgresql/data
+    ports:
+      - "26000:5432"
+
+volumes:
+  launchpad-db:
