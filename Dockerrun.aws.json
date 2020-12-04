@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "api",
-            "image": "357601261033.dkr.ecr.ca-central-1.amazonaws.com/lpb-mktfy:api",
+            "image": "357601261033.dkr.ecr.ca-central-1.amazonaws.com/ft-mktfy:api",
             "hostname": "api",
             "essential": true,
             "portMappings": [
@@ -16,7 +16,7 @@
         },
         {
             "name": "auth",
-            "image": "357601261033.dkr.ecr.ca-central-1.amazonaws.com/lpb-mktfy:auth",
+            "image": "357601261033.dkr.ecr.ca-central-1.amazonaws.com/ft-mktfy:auth",
             "hostname": "auth",
             "essential": true,
             "portMappings": [
