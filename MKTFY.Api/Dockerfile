@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["MKTFY.api/MKTFY.api.csproj", "MKTFY.api/"]
-RUN dotnet restore "MKTFY.api/MKTFY.api.csproj"
+COPY ["MKTFY.Api/MKTFY.Api.csproj", "MKTFY.Api/"]
+RUN dotnet restore "MKTFY.Api/MKTFY.Api.csproj"
 COPY . .
-WORKDIR "/src/MKTFY.api"
-RUN dotnet build "MKTFY.api.csproj" -c Release -o /app/build
+WORKDIR "/src/MKTFY.Api"
+RUN dotnet build "MKTFY.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MKTFY.api.csproj" -c Release -o /app/publish
+RUN dotnet publish "MKTFY.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MKTFY.api.dll"]
+ENTRYPOINT ["dotnet", "MKTFY.Api.dll"]
