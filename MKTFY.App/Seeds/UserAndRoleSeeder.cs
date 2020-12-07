@@ -23,13 +23,13 @@ namespace MKTFY.App.Seeds
                 await roleManager.CreateAsync(new IdentityRole("user"));
             }
 
-            var userResult = await userManager.FindByNameAsync("thiago+admin@launchpadbyvog.com");
+            var userResult = await userManager.FindByNameAsync("thiago@launchpadbyvog.com");
             if (userResult == null)
             {
                 var user = new User
                 {
-                    UserName = "thiago+admin@launchpadbyvog.com",
-                    Email = "thiago+Thiago@launchpadbyvog.com",
+                    UserName = "thiago@launchpadbyvog.com",
+                    Email = "thiago@launchpadbyvog.com",
                     FirstName = "Thiago",
                     LastName = "Admin",
                 };
