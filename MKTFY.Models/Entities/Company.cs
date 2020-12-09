@@ -1,9 +1,6 @@
-﻿using MKTFY.Models.Entities;
-using MKTFY.Models.ViewModels;
+﻿using MKTFY.Models.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace MKTFY.Models.Entities
 {

@@ -21,12 +21,14 @@ namespace MKTFY.Api.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
 
-        public AccountController(SignInManager<User> signInManager, IConfiguration configuration, IUserRepository userRepository)
+        public AccountController(SignInManager<User> signInManager, IConfiguration configuration, IUserRepository userRepository, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _configuration = configuration;
             _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         [HttpPost("login")]
@@ -75,6 +77,39 @@ namespace MKTFY.Api.Controllers
 
                 return Ok(new LoginResponseVM(tokenResponse, user));
             }
+        }
+
+        [HttpPost("signup")]
+        public async Task<ActionResult<UserVM>> Signup([FromBody] UserCreateVM src)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Please, check your data");
+            }
+
+            var userResult = await _userManager.FindByNameAsync(src.Email);
+
+            if (userResult == null)
+            {
+                var user = new User
+                {
+                    UserName = src.Email,
+                    Email = src.Email,
+                    FirstName = src.FirstName,
+                    LastName = src.LastName,
+                };
+                IdentityResult result = await _userManager.CreateAsync(user, src.Password);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "user");
+
+                    var newUser = new UserVM(user);
+                    return Ok(newUser);
+                }
+                return StatusCode(500);
+            }
+            return BadRequest("User already exists");
         }
     }
 }
