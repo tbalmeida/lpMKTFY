@@ -97,6 +97,7 @@ namespace MKTFY.Api.Controllers
                     Email = src.Email,
                     FirstName = src.FirstName,
                     LastName = src.LastName,
+                    CityId = src.CityId
                 };
                 IdentityResult result = await _userManager.CreateAsync(user, src.Password);
 

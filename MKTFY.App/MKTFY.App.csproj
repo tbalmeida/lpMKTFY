@@ -5,9 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201209171059_AddCityToUser.cs" />
+    <Compile Remove="Migrations\20201209171059_AddCityToUser.Designer.cs" />
+    <Compile Remove="Migrations\20201209184629_AddCityToUser.cs" />
+    <Compile Remove="Migrations\20201209184629_AddCityToUser.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

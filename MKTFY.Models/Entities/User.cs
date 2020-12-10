@@ -13,6 +13,7 @@ namespace MKTFY.Models.Entities
             FirstName = src.FirstName;
             LastName = src.LastName;
             Email = src.Email;
+            CityId = src.CityId;
         }
 
         [Required]
@@ -20,5 +21,7 @@ namespace MKTFY.Models.Entities
 
         [Required]
         public string LastName { get; set; }
+
+        public int? CityId { get; set; }
     }
 }

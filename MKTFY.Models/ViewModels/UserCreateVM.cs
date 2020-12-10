@@ -13,5 +13,7 @@ namespace MKTFY.Models.ViewModels
         public string LastName { get; set; }
 
         public string Password { get; set; }
+
+        public int? CityId { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace MKTFY.App.Seeds
                     UserName = "thiago@launchpadbyvog.com",
                     Email = "thiago@launchpadbyvog.com",
                     FirstName = "Thiago",
-                    LastName = "Admin",
+                    LastName = "Admin"
                 };
                 IdentityResult result = await userManager.CreateAsync(user, "Password1");
 
