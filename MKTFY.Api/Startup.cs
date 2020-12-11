@@ -71,6 +71,7 @@ namespace MKTFY.api
             // Add Repositories to dependency injection
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFAQRepository, FAQRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,5 +13,7 @@ namespace MKTFY.App
         }
 
         public DbSet<Company> Companies { get; set; }
+
+        public DbSet<FAQ> FAQs { get; set; }
     }
 }

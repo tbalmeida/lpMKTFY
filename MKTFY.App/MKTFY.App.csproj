@@ -9,6 +9,10 @@
     <Compile Remove="Migrations\20201209171059_AddCityToUser.Designer.cs" />
     <Compile Remove="Migrations\20201209184629_AddCityToUser.cs" />
     <Compile Remove="Migrations\20201209184629_AddCityToUser.Designer.cs" />
+    <Compile Remove="Migrations\20201210165614_AddFAQ.cs" />
+    <Compile Remove="Migrations\20201210165614_AddFAQ.Designer.cs" />
+    <Compile Remove="Migrations\20201210170021_AddFAQ.cs" />
+    <Compile Remove="Migrations\20201210170021_AddFAQ.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
