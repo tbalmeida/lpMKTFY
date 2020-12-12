@@ -74,5 +74,38 @@ namespace MKTFY.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        //[HttpPatch("{id}")]
+        //public async Task<ActionResult<FAQVM>> Update([FromBody] FAQUpdateVM src)
+        //{
+        //    try
+        //    {
+        //        var results = await _faqRepository.GetById(src.Id);
+        //        return Ok(results);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        if (ex.Message == "FAQ not found")
+        //            return NotFound(ex.Message);
+
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
+        [HttpDelete ("{id}")]
+        public async Task<ActionResult<string>> Delete(Guid id)
+        {
+            try
+            {
+                var delFAQ = await _faqRepository.Delete(id);
+                if (delFAQ == "FAQ not found")
+                    return NotFound(delFAQ);
+                return Ok(delFAQ);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

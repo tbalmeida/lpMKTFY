@@ -36,9 +36,23 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public Task<bool> Delete(Guid id)
+        public async Task<string> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == id);
+                if (result == null)
+                {
+                    return "FAQ not found";
+                }
+                _context.FAQs.Remove(result);
+                await _context.SaveChangesAsync();
+                return "FAQ deleted";
+            }
+            catch
+            {
+                throw new Exception("Error when deleting FAQ");
+            }
         }
 
         public async Task<List<FAQVM>> FilterFAQ(string searchTerm = null)
@@ -82,9 +96,19 @@ namespace MKTFY.App.Repositories
             return new FAQVM(result);
         }
 
-        public Task<FAQVM> Update(FAQUpdateVM src)
-        {
-            throw new NotImplementedException();
-        }
+        //public async Task<FAQVM> Update(FAQUpdateVM src)
+        //{
+        //    var currentFAQ = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == src.Id);
+        //    if (currentFAQ == null)
+        //    {
+        //        throw new Exception("FAQ not found");
+        //    }
+
+        //    currentFAQ.Title = src.Title;
+        //    currentFAQ.Text = src.Text;
+
+        //    await _context.SaveChangesAsync();
+        //    return new FAQVM(currentFAQ);
+        //}
     }
 }
