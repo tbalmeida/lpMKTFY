@@ -75,25 +75,8 @@ namespace MKTFY.Api.Controllers
             }
         }
 
-        //[HttpPatch("{id}")]
-        //public async Task<ActionResult<FAQVM>> Update([FromBody] FAQUpdateVM src)
-        //{
-        //    try
-        //    {
-        //        var results = await _faqRepository.GetById(src.Id);
-        //        return Ok(results);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if (ex.Message == "FAQ not found")
-        //            return NotFound(ex.Message);
-
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        [HttpDelete ("{id}")]
-        public async Task<ActionResult<string>> Delete(Guid id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<string>> Delete([FromRoute] Guid id)
         {
             try
             {
@@ -107,5 +90,26 @@ namespace MKTFY.Api.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> Update([FromRoute] Guid id, [FromBody] FAQUpdateVM src)
+        {
+            if (id != src.Id || !ModelState.IsValid)
+                return BadRequest("Please, check the data provided.");
+
+            try
+            {
+                var results = await _faqRepository.Update(id, src);
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "FAQ not found")
+                    return NotFound(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

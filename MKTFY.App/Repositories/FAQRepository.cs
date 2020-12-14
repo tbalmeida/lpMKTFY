@@ -96,19 +96,18 @@ namespace MKTFY.App.Repositories
             return new FAQVM(result);
         }
 
-        //public async Task<FAQVM> Update(FAQUpdateVM src)
-        //{
-        //    var currentFAQ = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == src.Id);
-        //    if (currentFAQ == null)
-        //    {
-        //        throw new Exception("FAQ not found");
-        //    }
+        public async Task<FAQVM> Update(Guid id, FAQUpdateVM src)
+        {
+            var thisFAQ = await _context.FAQs.FirstOrDefaultAsync(x => x.Id == id);
+            if (thisFAQ == null)
+                throw new Exception("FAQ not found");
 
-        //    currentFAQ.Title = src.Title;
-        //    currentFAQ.Text = src.Text;
+            thisFAQ.Text = src.Text;
+            thisFAQ.Title = src.Title;
 
-        //    await _context.SaveChangesAsync();
-        //    return new FAQVM(currentFAQ);
-        //}
+            await _context.SaveChangesAsync();
+
+            return new FAQVM(thisFAQ);
+        }
     }
 }
