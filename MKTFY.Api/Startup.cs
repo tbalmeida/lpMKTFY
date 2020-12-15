@@ -87,7 +87,7 @@ namespace MKTFY.api
             app.UseRouting();
 
             // Initialize the database
-            //UpdateDatabase(app);
+            // UpdateDatabase(app);
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -99,17 +99,17 @@ namespace MKTFY.api
         }
 
         // Update the database to the latest migrations
-        private static void UpdateDatabase(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices
-                 .GetRequiredService<IServiceScopeFactory>()
-                 .CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
-        }
+        //private static void UpdateDatabase(IApplicationBuilder app)
+        //{
+        //    using (var serviceScope = app.ApplicationServices
+        //         .GetRequiredService<IServiceScopeFactory>()
+        //         .CreateScope())
+        //    {
+        //        using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+        //        {
+        //            context.Database.Migrate();
+        //        }
+        //    }
+        //}
     }
 }

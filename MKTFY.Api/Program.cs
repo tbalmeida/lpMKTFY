@@ -29,6 +29,8 @@ namespace MKTFY.api
 
                     context.Database.Migrate();
                     Task.Run(async () => await UserAndRoleSeeder.SeedUsersAndRoles(roleManager, userManager)).Wait();
+
+                    Task.Run(async () => await BasicDataSeeder.SeedBasicConfig(context)).Wait();
                 }
                 catch (Exception ex)
                 {
