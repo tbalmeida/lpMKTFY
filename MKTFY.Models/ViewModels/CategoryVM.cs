@@ -1,7 +1,5 @@
 ﻿using MKTFY.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace MKTFY.Models.ViewModels
 {
@@ -13,7 +11,10 @@ namespace MKTFY.Models.ViewModels
             Title = src.Title;
         }
 
+        [Key]
         public int Id { get; set; }
+
+        [Required, MaxLength(20)]
 
         public string Title { get; set; }
 
