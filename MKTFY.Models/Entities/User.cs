@@ -23,5 +23,8 @@ namespace MKTFY.Models.Entities
         public string LastName { get; set; }
 
         public int? CityId { get; set; }
+
+        // Navigational
+        public City City { get; set; }
     }
 }
