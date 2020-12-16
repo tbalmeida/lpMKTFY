@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MKTFY.App;
 using MKTFY.App.Repositories;
 using MKTFY.App.Repositories.Interfaces;
@@ -9,14 +5,11 @@ using MKTFY.Models.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 
 namespace MKTFY.api
@@ -72,6 +65,7 @@ namespace MKTFY.api
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFAQRepository, FAQRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

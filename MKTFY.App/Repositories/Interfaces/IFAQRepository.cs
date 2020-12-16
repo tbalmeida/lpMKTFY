@@ -9,14 +9,15 @@ namespace MKTFY.App.Repositories.Interfaces
     {
         Task<FAQVM> Create(FAQCreateVM src);
 
-        Task<string> Delete(Guid id);
-
-        Task<List<FAQVM>> FilterFAQ(string searchTerm = null);
-
+        Task<FAQVM> Update(Guid id, FAQUpdateVM src);
+        
         Task<List<FAQVM>> GetAll();
 
         Task<FAQVM> GetById(Guid id);
 
-        Task<FAQVM> Update(Guid id, FAQUpdateVM src);
+        Task<List<FAQVM>> FilterFAQ(string searchTerm = null);
+
+        Task<string> Delete(Guid id);
+
     }
 }

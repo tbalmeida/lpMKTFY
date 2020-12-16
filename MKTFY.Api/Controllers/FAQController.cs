@@ -110,6 +110,5 @@ namespace MKTFY.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
