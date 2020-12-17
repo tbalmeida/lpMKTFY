@@ -9,5 +9,13 @@ namespace MKTFY.App.Repositories.Interfaces
     public interface ICityRepository
     {
         Task<List<CityVM>> GetAll();
+
+        Task<CityVM> GetById(int id);
+
+        Task<CityVM> Create(CityCreateVM src);
+
+        Task<CityVM> Update(int id, CityUpdateVM src);
+
+        Task<string> Delete(int id);
     }
 }

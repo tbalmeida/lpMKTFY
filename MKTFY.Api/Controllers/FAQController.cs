@@ -33,7 +33,7 @@ namespace MKTFY.Api.Controllers
             }
             catch
             {
-                throw new ArgumentException("Error on FAQ creation.");
+                throw new Exception("Error on FAQ creation.");
             }
         }
 

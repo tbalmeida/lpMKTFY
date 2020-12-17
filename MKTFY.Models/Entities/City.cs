@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MKTFY.Models.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MKTFY.Models.Entities
@@ -6,6 +7,12 @@ namespace MKTFY.Models.Entities
     public class City
     {
         public City() { }
+
+        public City(CityCreateVM data)
+        {
+            Name = data.Name;
+            ProvinceId = data.ProvinceId;
+        }
 
         [Key]
         public int Id { get; set; }
