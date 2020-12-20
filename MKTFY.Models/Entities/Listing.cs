@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MKTFY.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +8,21 @@ namespace MKTFY.Models.Entities
 {
     public class Listing
     {
+
+        public Listing() { }
+
+        public Listing(ListingCreateVM src)
+        {
+            Title = src.Title;
+            Description = src.Description;
+            CategoryId = src.CategoryId;
+            Price = src.Price;
+            UserId = src.UserId;
+            CityId = src.CityId;
+            ListingStatusId = src.ListingStatusId;
+            Created = src.Created;
+        }
+
         [Key]
         public Guid Id { get; set; }
 
@@ -36,7 +52,7 @@ namespace MKTFY.Models.Entities
         [Timestamp]
         public DateTime Created { get; set; }
 
-        public DateTime Updated { get; set; }
+        public DateTime? Updated { get; set; }
 
         // Navigational
         public User User { get; set; }
