@@ -31,7 +31,11 @@ namespace MKTFY.App.Seeds
 
                 await dbContext.AddRangeAsync(city);
                 await dbContext.SaveChangesAsync();
+            }
 
+            var activeStatus = await dbContext.ListingStatuses.Where(ls => ls.Name == "Active").FirstOrDefaultAsync();
+            if (activeStatus == null)
+            {
                 var listStatuses = new List<ListingStatus>
                 {
                     new ListingStatus { Name = "Active"},
@@ -42,6 +46,21 @@ namespace MKTFY.App.Seeds
                 };
 
                 await dbContext.AddRangeAsync(listStatuses);
+                await dbContext.SaveChangesAsync();
+            }
+
+            var itemUsed = await dbContext.ItemConditions.Where(ic => ic.Name == "Used").FirstOrDefaultAsync();
+            if (itemUsed == null)
+            {
+                var itemConditions = new List<ItemCondition>
+                {
+                    new ItemCondition { Name = "Used"},
+                    new ItemCondition { Name = "New in sealed box"},
+                    new ItemCondition { Name = "New in opened box"},
+                    new ItemCondition { Name = "New without box"}
+                };
+
+                await dbContext.AddRangeAsync(itemConditions);
                 await dbContext.SaveChangesAsync();
             }
         }

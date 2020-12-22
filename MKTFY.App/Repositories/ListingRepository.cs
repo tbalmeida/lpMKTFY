@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using IdentityServer4.Extensions;
+using Microsoft.EntityFrameworkCore;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
@@ -58,10 +59,34 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public async Task<List<ListingVM>> GetAll(int status = 1, string searchText = null, int? filterCategory = null, Guid? owner = null)
+        public async Task<List<ListingVM>> GetListings(string searchText)
         {
             // TBI - filters
-            var results = await _context.Listings.OrderBy(lst => lst.Created).ToListAsync();
+            var query = _context.Listings
+                .Include(item => item.Category)
+                .Include(item2 => item2.ItemCondition)
+                .Include(item => item.ListingStatus)
+                .Include(item => item.City)
+                .AsQueryable();
+
+            // Filter on status
+            if ( !searchText.IsNullOrEmpty() )
+            {
+                var lowerSearchText = searchText.ToLower();
+                query = query.Where(item => 
+                    item.Title.ToLower().Contains(lowerSearchText)
+                    || item.Description.ToLower().Contains(lowerSearchText)
+                );
+            }
+
+            // Filter on searchText
+            //if (!String.IsNullOrEmpty(searchText))
+            //{
+            //    query = ...
+            //}
+            
+            
+            var results = await query.OrderBy(lst => lst.Created).ToListAsync();
 
             var models = new List<ListingVM>();
             foreach (var item in results)
@@ -74,7 +99,10 @@ namespace MKTFY.App.Repositories
 
         public async Task<ListingVM> GetById(Guid id)
         {
-            var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
+            var result = await _context.Listings
+                .Include(cat => cat.Category)
+                .FirstOrDefaultAsync(lst => lst.Id == id);
+
             if (result == null)
             {
                 throw new Exception("Listing not found");

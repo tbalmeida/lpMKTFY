@@ -11,8 +11,14 @@ namespace MKTFY.Models.ViewModels
         [Required, MaxLength(1000), MinLength(10)]
         public string Description { get; set; }
 
+        [Required, MinLength(6), MaxLength(200)]
+        public string Location { get; set; }
+
         [Required]
         public int CategoryId { get; set; }
+
+        [Required]
+        public int ItemConditionId { get; set; }
 
         [Required]
         public decimal Price { get; set; }
@@ -27,7 +33,6 @@ namespace MKTFY.Models.ViewModels
         [Required]
         public int ListingStatusId { get; set; }
 
-        [Timestamp]
         public DateTime Created { get; set; } = DateTime.Now;
     }
 }

@@ -11,15 +11,24 @@ namespace MKTFY.Models.ViewModels
         public ListingVM(Listing src)
         {
             Id = src.Id;
+            CategoryId = src.CategoryId;
+            CategoryTitle = src.Category == null ? null : src.Category.Title;
+            ItemConditionId = src.ItemConditionId;
+            ItemConditionName = src.ItemCondition == null ? null : src.ItemCondition.Name;
             Title = src.Title;
             Description = src.Description;
-            CategoryId = src.CategoryId;
             Price = src.Price;
             UserId = src.UserId;
             CityId = src.CityId;
+            City = src.City == null ? null : src.City.Name;
+            Location = src.Location;
             ListingStatusId = src.ListingStatusId;
+            StatusName = src.ListingStatus == null ? null : src.ListingStatus.Name;
             Created = src.Created;
-            Updated = (DateTime)src.Updated;
+            if (src.Updated != null)
+            {
+                Updated = (DateTime)src.Updated;
+            }
         }
 
 
@@ -37,10 +46,22 @@ namespace MKTFY.Models.ViewModels
 
         public int CityId { get; set; }
 
+        public string City { get; set; }
+
         public int ListingStatusId { get; set; }
+
+        public string StatusName { get; set; }
+
+        public int ItemConditionId { get; set; }
+
+        public string ItemConditionName { get; set; }
+
+        public string Location { get; set; }
 
         public DateTime Created { get; set; }
 
         public DateTime Updated { get; set; }
+
+        public string CategoryTitle { get; set; }
     }
 }

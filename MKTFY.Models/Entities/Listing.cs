@@ -21,6 +21,8 @@ namespace MKTFY.Models.Entities
             CityId = src.CityId;
             ListingStatusId = src.ListingStatusId;
             Created = src.Created;
+            Location = src.Location;
+            ItemConditionId = src.ItemConditionId;
         }
 
         [Key]
@@ -31,6 +33,9 @@ namespace MKTFY.Models.Entities
 
         [Required, MaxLength(1000), MinLength(10)]
         public string Description { get; set; }
+
+        [Required, MinLength(6), MaxLength(200)]
+        public string Location { get; set; }
 
         [Required]
         public int CategoryId { get; set; }
@@ -49,7 +54,9 @@ namespace MKTFY.Models.Entities
         [Column("status")]
         public int ListingStatusId { get; set; }
 
-        [Timestamp]
+        [Required]
+        public int ItemConditionId { get; set; }
+
         public DateTime Created { get; set; }
 
         public DateTime? Updated { get; set; }
@@ -62,6 +69,8 @@ namespace MKTFY.Models.Entities
         public Category Category { get; set; }
 
         public ListingStatus ListingStatus { get; set; }
+
+        public ItemCondition ItemCondition { get; set; }
 
         public ICollection<ListingImage> ListingImages { get; set; }
 
