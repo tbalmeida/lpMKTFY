@@ -29,6 +29,7 @@ namespace MKTFY.Models.ViewModels
             {
                 Updated = (DateTime)src.Updated;
             }
+            Seller = src.User == null ? null : src.User.FirstName + " " + src.User.LastName;
         }
 
 
@@ -40,9 +41,13 @@ namespace MKTFY.Models.ViewModels
 
         public int CategoryId { get; set; }
 
+        public string CategoryTitle { get; set; }
+
         public decimal Price { get; set; }
 
         public string UserId { get; set; }
+
+        public string Seller { get; set; }
 
         public int CityId { get; set; }
 
@@ -61,7 +66,5 @@ namespace MKTFY.Models.ViewModels
         public DateTime Created { get; set; }
 
         public DateTime Updated { get; set; }
-
-        public string CategoryTitle { get; set; }
     }
 }

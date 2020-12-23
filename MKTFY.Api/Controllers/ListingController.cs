@@ -40,11 +40,11 @@ namespace MKTFY.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string searchText)
+        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
         {
             try
             {
-                var results = await _listingRepository.GetListings(searchText);
+                var results = await _listingRepository.GetListings(sTxt, sCty, sSts, sCat, sIC);
                 return Ok(results);
             }
             catch
@@ -53,6 +53,19 @@ namespace MKTFY.Api.Controllers
             }
         }
 
+        [HttpGet("short")]
+        public async Task<ActionResult<List<ListingShortVM>>> GetShortListings([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
+        {
+            try
+            {
+                var results = await _listingRepository.GetShortListings(sTxt, sCty, sSts, sCat, sIC);
+                return Ok(results);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<ListingVM>> GetById(Guid id)
         {

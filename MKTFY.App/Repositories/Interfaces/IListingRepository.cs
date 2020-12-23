@@ -16,7 +16,9 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<string> Delete(Guid id);
 
-        Task<List<ListingVM>> GetListings(string searchText);
+        Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
+
+        Task<List<ListingShortVM>> GetShortListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
 
         Task<bool> UpdatePrice(Guid id, decimal newPrice);
 
