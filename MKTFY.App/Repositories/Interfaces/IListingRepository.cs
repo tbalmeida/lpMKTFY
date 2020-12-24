@@ -20,8 +20,8 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<List<ListingShortVM>> GetShortListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
 
-        Task<bool> UpdatePrice(Guid id, decimal newPrice);
+        Task<ListingVM> UpdatePrice(Guid id, ListingPriceUpdateVM src);
 
-        Task<bool> UpdateStatus(Guid id, int newStatus);
+        Task<ListingVM> UpdateStatus(Guid id, ListingStatusUpdateVM src);
     }
 }

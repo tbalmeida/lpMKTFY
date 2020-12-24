@@ -61,7 +61,6 @@ namespace MKTFY.App.Repositories
 
         public async Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
         {
-            // TBI - filters
             var query = _context.Listings
                 .Include(item => item.Category)
                 .Include(item => item.ItemCondition)
@@ -171,7 +170,11 @@ namespace MKTFY.App.Repositories
         public async Task<ListingVM> GetById(Guid id)
         {
             var result = await _context.Listings
-                .Include(cat => cat.Category)
+                .Include(item => item.Category)
+                .Include(item => item.City)
+                .Include(item => item.ItemCondition)
+                .Include(item => item.ListingStatus)
+                .Include(item => item.User)
                 .FirstOrDefaultAsync(lst => lst.Id == id);
 
             if (result == null)
@@ -201,15 +204,15 @@ namespace MKTFY.App.Repositories
             curListing.Price = src.Price;
             curListing.CityId = src.CityId;
             curListing.ListingStatusId = src.ListingStatusId;
+            curListing.Updated = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
             return new ListingVM(curListing);
         }
 
-        public async Task<bool> UpdatePrice(Guid id, decimal newPrice)
+        public async Task<ListingVM> UpdatePrice(Guid id, ListingPriceUpdateVM src)
         {
-            bool thisResult = false;
 
             var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
             if (result == null)
@@ -217,16 +220,14 @@ namespace MKTFY.App.Repositories
                 throw new Exception("Listing not found");
             }
 
-            result.Price = newPrice;
+            result.Price = src.Price;
             await _context.SaveChangesAsync();
-            thisResult = true;
 
-            return thisResult;
+            return new ListingVM(result);
         }
 
-        public async Task<bool> UpdateStatus(Guid id, int newStatus)
+        public async Task<ListingVM> UpdateStatus(Guid id, ListingStatusUpdateVM src)
         {
-            bool thisResult = false;
 
             var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
             if (result == null)
@@ -234,11 +235,10 @@ namespace MKTFY.App.Repositories
                 throw new Exception("Listing not found");
             }
 
-            result.ListingStatusId = newStatus;
+            result.ListingStatusId = src.ListingStatusId;
             await _context.SaveChangesAsync();
-            thisResult = true;
 
-            return thisResult;
+            return new ListingVM(result);
         }
     }
 }

@@ -17,11 +17,11 @@ namespace MKTFY.Models.ViewModels
             ItemConditionName = src.ItemCondition == null ? null : src.ItemCondition.Name;
             Title = src.Title;
             Description = src.Description;
-            Price = src.Price;
             UserId = src.UserId;
             CityId = src.CityId;
             City = src.City == null ? null : src.City.Name;
             Location = src.Location;
+            Price = src.Price;
             ListingStatusId = src.ListingStatusId;
             StatusName = src.ListingStatus == null ? null : src.ListingStatus.Name;
             Created = src.Created;
