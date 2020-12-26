@@ -58,7 +58,7 @@ namespace MKTFY.Api.Controllers
         {
             try
             {
-                var results = await _listingRepository.GetShortListings(sTxt, sCty, sSts, sCat, sIC);
+                var results = await _listingRepository.GetListingsShort(sTxt, sCty, sSts, sCat, sIC);
                 return Ok(results);
             }
             catch
