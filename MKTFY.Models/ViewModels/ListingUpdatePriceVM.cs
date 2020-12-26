@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MKTFY.Models.ViewModels
 {
-    public class ListingPriceUpdateVM
+    public class ListingUpdatePriceVM
     {
         [Required]
         public Guid Id { get; set; }

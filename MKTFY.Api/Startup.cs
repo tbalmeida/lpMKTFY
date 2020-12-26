@@ -68,6 +68,8 @@ namespace MKTFY.api
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IListingRepository, ListingRepository>();
+            services.AddScoped<IItemConditionRepository, ItemConditionRepository>();
+            services.AddScoped<IListingStatusRepository, ListingStatusRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

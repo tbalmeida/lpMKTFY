@@ -54,7 +54,7 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet("short")]
-        public async Task<ActionResult<List<ListingShortVM>>> GetShortListings([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
+        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ListingVM>> GetById(Guid id)
+        public async Task<ActionResult<ListingVM>> GetById([FromRoute] Guid id)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<ListingVM>> Update(Guid id, ListingUpdateVM src)
+        public async Task<ActionResult<ListingVM>> Update([FromRoute] Guid id, [FromBody] ListingUpdateVM src)
         {
             if (!ModelState.IsValid || id != src.Id)
             {
@@ -106,7 +106,7 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpPatch("{id}/price")]
-        public async Task<ActionResult<ListingVM>> UpdatePrice(Guid id, ListingPriceUpdateVM src)
+        public async Task<ActionResult<ListingVM>> UpdatePrice([FromRoute] Guid id, [FromBody] ListingUpdatePriceVM src)
         {
             if (!ModelState.IsValid || id != src.Id)
             {
@@ -130,7 +130,7 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpPatch("{id}/status")]
-        public async Task<ActionResult<ListingVM>> UpdateStatus(Guid id, ListingStatusUpdateVM src)
+        public async Task<ActionResult<ListingVM>> UpdateStatus(Guid id, ListingUpdateStatusVM src)
         {
             if (!ModelState.IsValid || id != src.Id)
             {

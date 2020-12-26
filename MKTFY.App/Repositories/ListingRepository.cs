@@ -112,7 +112,7 @@ namespace MKTFY.App.Repositories
             return models;
         }
 
-        public async Task<List<ListingShortVM>> GetShortListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
+        public async Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
         {
             // TBI - filters
             var query = _context.Listings
@@ -166,7 +166,6 @@ namespace MKTFY.App.Repositories
             return models;
         }
 
-
         public async Task<ListingVM> GetById(Guid id)
         {
             var result = await _context.Listings
@@ -211,7 +210,7 @@ namespace MKTFY.App.Repositories
             return new ListingVM(curListing);
         }
 
-        public async Task<ListingVM> UpdatePrice(Guid id, ListingPriceUpdateVM src)
+        public async Task<ListingVM> UpdatePrice(Guid id, ListingUpdatePriceVM src)
         {
 
             var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
@@ -226,7 +225,7 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<ListingVM> UpdateStatus(Guid id, ListingStatusUpdateVM src)
+        public async Task<ListingVM> UpdateStatus(Guid id, ListingUpdateStatusVM src)
         {
 
             var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);

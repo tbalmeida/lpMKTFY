@@ -41,6 +41,7 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<CompanyVM>>> GetAll()
         {
             try

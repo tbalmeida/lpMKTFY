@@ -18,10 +18,10 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
 
-        Task<List<ListingShortVM>> GetShortListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
+        Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
 
-        Task<ListingVM> UpdatePrice(Guid id, ListingPriceUpdateVM src);
+        Task<ListingVM> UpdatePrice(Guid id, ListingUpdatePriceVM src);
 
-        Task<ListingVM> UpdateStatus(Guid id, ListingStatusUpdateVM src);
+        Task<ListingVM> UpdateStatus(Guid id, ListingUpdateStatusVM src);
     }
 }
