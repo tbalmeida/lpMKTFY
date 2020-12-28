@@ -1,7 +1,5 @@
 ﻿using MKTFY.Models.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MKTFY.Models.ViewModels
 {
@@ -30,6 +28,7 @@ namespace MKTFY.Models.ViewModels
                 Updated = (DateTime)src.Updated;
             }
             Seller = src.User == null ? null : src.User.FirstName + " " + src.User.LastName;
+            DaysPosted = DaysDiff();
         }
 
 
@@ -43,6 +42,13 @@ namespace MKTFY.Models.ViewModels
 
         public string CategoryTitle { get; set; }
 
+        public int ItemConditionId { get; set; }
+
+        public string ItemConditionName { get; set; }
+        public int ListingStatusId { get; set; }
+
+        public string StatusName { get; set; }
+
         public decimal Price { get; set; }
 
         public string UserId { get; set; }
@@ -53,18 +59,18 @@ namespace MKTFY.Models.ViewModels
 
         public string City { get; set; }
 
-        public int ListingStatusId { get; set; }
-
-        public string StatusName { get; set; }
-
-        public int ItemConditionId { get; set; }
-
-        public string ItemConditionName { get; set; }
-
         public string Location { get; set; }
 
         public DateTime Created { get; set; }
 
         public DateTime Updated { get; set; }
+
+        public int DaysPosted { get; }
+
+        private int DaysDiff()
+        {
+            TimeSpan qtDays = DateTime.Now - Created;
+            return qtDays.Days;
+        }
     }
 }
