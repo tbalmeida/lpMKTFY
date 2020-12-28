@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MKTFY.Models.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MKTFY.Models.Entities
@@ -26,5 +27,6 @@ namespace MKTFY.Models.Entities
 
         // Navigational
         public City City { get; set; }
+        public ICollection<Listing> Listings { get; set; }
     }
 }
