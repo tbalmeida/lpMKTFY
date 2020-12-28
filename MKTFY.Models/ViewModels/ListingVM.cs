@@ -28,7 +28,7 @@ namespace MKTFY.Models.ViewModels
                 Updated = (DateTime)src.Updated;
             }
             Seller = src.User == null ? null : src.User.FirstName + " " + src.User.LastName;
-            DaysPosted = DaysDiff();
+            DaysPosted = DaysDiff() == 0 ? "Posted today" : "Posted " + DaysDiff().ToString() + " days ago";
         }
 
 
@@ -65,7 +65,7 @@ namespace MKTFY.Models.ViewModels
 
         public DateTime Updated { get; set; }
 
-        public int DaysPosted { get; }
+        public string DaysPosted { get; }
 
         private int DaysDiff()
         {
