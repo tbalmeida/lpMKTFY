@@ -14,6 +14,8 @@ services:
       #- ConnectionStrings__DefaultConnection=Server=lppmktfy-rds.c1jfu3fqwoj9.ca-central-1.rds.amazonaws.com;Database=mktfy_db;User Id=mktfyAdmin;password=NotAPassword
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
+      - SendGrid=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
+      - DefaultEmail=thiago@launchpadbyvog.com
 
     depends_on:
       - "mktfy.db"

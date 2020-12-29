@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20201214234539_AddEntities.Designer.cs" />
     <Compile Remove="Migrations\20201220164758_DelListingTimestamp.cs" />
     <Compile Remove="Migrations\20201220164758_DelListingTimestamp.Designer.cs" />
+    <Compile Remove="Repositories\ContactUsRepository.cs" />
+    <Compile Remove="Repositories\Interfaces\IContactUsRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
