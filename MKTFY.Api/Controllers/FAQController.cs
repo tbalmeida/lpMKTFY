@@ -24,8 +24,6 @@ namespace MKTFY.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<FAQVM>> Create([FromBody] FAQCreateVM src)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid data");
             var result = await _faqRepository.Create(src);
             return Ok(result);
         }
@@ -56,17 +54,12 @@ namespace MKTFY.Api.Controllers
         public async Task<ActionResult<string>> Delete([FromRoute] Guid id)
         {
             var delFAQ = await _faqRepository.Delete(id);
-            if (delFAQ == "FAQ not found")
-                return NotFound(delFAQ);
             return Ok(delFAQ);
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult> Update([FromRoute] Guid id, [FromBody] FAQUpdateVM src)
         {
-            if (id != src.Id || !ModelState.IsValid)
-                return BadRequest("Please, check the data provided.");
-
             var results = await _faqRepository.Update(id, src);
             return Ok(results);
         }

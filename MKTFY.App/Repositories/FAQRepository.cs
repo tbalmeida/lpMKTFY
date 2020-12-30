@@ -30,9 +30,9 @@ namespace MKTFY.App.Repositories
 
                 return new FAQVM(entity);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("Error on FAQ creation.");
+                throw new Exception("Error on FAQ creation.\n" + ex.Message);
             }
         }
 
@@ -42,11 +42,11 @@ namespace MKTFY.App.Repositories
             {
                 var result = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == id);
                 if (result == null)
-                {
-                    return "FAQ not found";
-                }
+                    throw new NotFoundException("FAQ not found, please check the Id provided", id.ToString());
+
                 _context.FAQs.Remove(result);
                 await _context.SaveChangesAsync();
+
                 return "FAQ deleted";
             }
             catch
@@ -90,17 +90,19 @@ namespace MKTFY.App.Repositories
         {
             var result = await _context.FAQs.FirstOrDefaultAsync(x => x.Id == id);
             if (result == null)
-            {
-                throw new NotFoundException("FAQ not found, please check the Id provided");
-            }
+                throw new NotFoundException("FAQ not found, please check the Id provided", id.ToString());
+
             return new FAQVM(result);
         }
 
         public async Task<FAQVM> Update(Guid id, FAQUpdateVM src)
         {
+            if (id != src.Id)
+                throw new MismatchingId( id.ToString() );
+
             var thisFAQ = await _context.FAQs.FirstOrDefaultAsync(x => x.Id == id);
             if (thisFAQ == null)
-                throw new Exception("FAQ not found");
+                throw new NotFoundException("FAQ not found, please check the Id provided", id.ToString());
 
             thisFAQ.Text = src.Text;
             thisFAQ.Title = src.Title;

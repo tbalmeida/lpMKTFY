@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MKTFY.App.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -28,23 +26,32 @@ namespace MKTFY.App.Middleware
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-                string errorMessage = null;
+                string errorMessage = err.Message ?? null;
+                string id = null;
 
                 switch (err)
                 {
                     case NotFoundException e:
                         response.StatusCode = (int)HttpStatusCode.NotFound; // 404
                         errorMessage = e.Message;
+                        id = e.id;
+                        break;
+
+                    case MismatchingId e:
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;   //400
+                        id = e.id;
                         break;
 
                     default:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        errorMessage = "Sorry, your request cound not be completed.\n" + err.Message;
                         break;
                 }
 
                 // return the response
-                var result = JsonSerializer.Serialize(new { message = errorMessage });
+                var result = id == null ? 
+                        JsonSerializer.Serialize(new { message = errorMessage }) 
+                    :   JsonSerializer.Serialize(new { message = errorMessage, id = id });
+
                 await response.WriteAsync(result);
             }
         }

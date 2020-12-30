@@ -2,11 +2,12 @@
 
 namespace MKTFY.App.Exceptions
 {
-    public class NotFoundException : Exception
+
+    public class MismatchingId : Exception
     {
         private readonly string _id;
-
-        public NotFoundException(string message, string id) : base(message) 
+        
+        public MismatchingId(string id, string message = "The id provided does not match, please check the URL and the form data.") : base(message)
         {
             _id = id;
         }
@@ -18,5 +19,6 @@ namespace MKTFY.App.Exceptions
                 return _id.ToString();
             }
         }
+
     }
 }
