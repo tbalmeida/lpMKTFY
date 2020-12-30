@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
 using System;
@@ -25,70 +26,39 @@ namespace MKTFY.Api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data");
-
-            try
-            {
-                var result = await _faqRepository.Create(src);
-                return Ok(result);
-            }
-            catch
-            {
-                throw new Exception("Error on FAQ creation.");
-            }
+            var result = await _faqRepository.Create(src);
+            return Ok(result);
         }
 
         [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<FAQVM>>> GetFAQ([FromQuery] string search)
         {
-            try
+            if (search != null)
             {
-                if (search != null)
-                {
-                    var filteredResults = await _faqRepository.FilterFAQ(search);
-                    return Ok(filteredResults);
-                }
+                var filteredResults = await _faqRepository.FilterFAQ(search);
+                return Ok(filteredResults);
+            }
 
-                var results = await _faqRepository.GetAll();
-                return Ok(results);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var results = await _faqRepository.GetAll();
+            return Ok(results);
+
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<FAQVM>> GetById([FromRoute] Guid id)
         {
-            try
-            {
-                var results = await _faqRepository.GetById(id);
-                return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "FAQ not found")
-                    return NotFound(ex.Message);
-
-                return BadRequest(ex.Message);
-            }
+            var results = await _faqRepository.GetById(id);
+            return Ok(results);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<string>> Delete([FromRoute] Guid id)
         {
-            try
-            {
-                var delFAQ = await _faqRepository.Delete(id);
-                if (delFAQ == "FAQ not found")
-                    return NotFound(delFAQ);
-                return Ok(delFAQ);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var delFAQ = await _faqRepository.Delete(id);
+            if (delFAQ == "FAQ not found")
+                return NotFound(delFAQ);
+            return Ok(delFAQ);
         }
 
         [HttpPatch("{id}")]
@@ -97,18 +67,8 @@ namespace MKTFY.Api.Controllers
             if (id != src.Id || !ModelState.IsValid)
                 return BadRequest("Please, check the data provided.");
 
-            try
-            {
-                var results = await _faqRepository.Update(id, src);
-                return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "FAQ not found")
-                    return NotFound(ex.Message);
-
-                return BadRequest(ex.Message);
-            }
+            var results = await _faqRepository.Update(id, src);
+            return Ok(results);
         }
     }
 }

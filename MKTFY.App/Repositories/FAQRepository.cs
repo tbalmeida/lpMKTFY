@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
@@ -90,7 +91,7 @@ namespace MKTFY.App.Repositories
             var result = await _context.FAQs.FirstOrDefaultAsync(x => x.Id == id);
             if (result == null)
             {
-                throw new Exception("FAQ not found");
+                throw new NotFoundException("FAQ not found, please check the Id provided");
             }
             return new FAQVM(result);
         }

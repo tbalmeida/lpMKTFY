@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
+using MKTFY.App.Middleware;
 
 namespace MKTFY.api
 {
@@ -83,6 +84,9 @@ namespace MKTFY.api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // using our Exception Handler
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             // Initialize the database
             // UpdateDatabase(app);
