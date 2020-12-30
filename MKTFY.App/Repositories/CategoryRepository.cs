@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
@@ -12,6 +13,8 @@ namespace MKTFY.App.Repositories
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
+
+        private readonly string _notFoundMsg = "Category not found, please check the Id provided";
 
         public CategoryRepository(ApplicationDbContext dbContext)
         {
@@ -42,41 +45,58 @@ namespace MKTFY.App.Repositories
 
         public async Task<List<CategoryVM>> GetAll()
         {
-            var results = await _context.Categories.ToListAsync();
-
-            var models = new List<CategoryVM>();
-            foreach (var entity in results)
+            try
             {
-                models.Add(new CategoryVM(entity));
-            }
+                var results = await _context.Categories.ToListAsync();
 
-            return models;
+                var models = new List<CategoryVM>();
+                foreach (var entity in results)
+                {
+                    models.Add(new CategoryVM(entity));
+                }
+
+                return models;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retrieving Categories.\n" + ex.Message);
+            }
         }
 
         public async Task<CategoryVM> GetById(int id)
         {
-            var result = await _context.Categories.FirstOrDefaultAsync(cat => cat.Id == id);
-            if (result == null)
+            try
             {
-                throw new Exception("Category not found");
-            }
+                var result = await _context.Categories.FirstOrDefaultAsync(cat => cat.Id == id);
+                if (result == null)
+                    throw new NotFoundException( _notFoundMsg, id.ToString() );
 
-            return new CategoryVM(result);
+                return new CategoryVM(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retrieving Category.\n" + ex.Message);
+            }
         }
 
         public async Task<CategoryVM> Update(int id, CategoryUpdateVM src)
         {
-            var currEntity = await _context.Categories.FirstOrDefaultAsync(cat => cat.Id == id);
-            if (currEntity == null)
+            try
             {
-                throw new Exception("Category not found");
+                var currEntity = await _context.Categories.FirstOrDefaultAsync(cat => cat.Id == id);
+                if (currEntity == null)
+                    throw new NotFoundException(_notFoundMsg, id.ToString());
+
+                currEntity.Title = src.Title;
+
+                await _context.SaveChangesAsync();
+
+                return new CategoryVM(currEntity);
             }
-
-            currEntity.Title = src.Title;
-
-            await _context.SaveChangesAsync();
-
-            return new CategoryVM(currEntity);
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating a Category.\n" + ex.Message);
+            }
         }
 
         public async Task<string> Delete(int Id)
@@ -85,9 +105,8 @@ namespace MKTFY.App.Repositories
             {
                 var result = await _context.Categories.FirstOrDefaultAsync(cat => cat.Id == Id);
                 if (result == null)
-                {
-                    return "Category not found";
-                }
+                    throw new NotFoundException(_notFoundMsg, Id.ToString());
+
                 _context.Categories.Remove(result);
                 await _context.SaveChangesAsync();
                 return "Category deleted";

@@ -14,6 +14,10 @@ namespace MKTFY.App.Repositories
     {
         private readonly ApplicationDbContext _context;
 
+        // Error message
+        private readonly string _notFoundMsg = "FAQ not found, please check the Id provided";
+
+
         public FAQRepository(ApplicationDbContext dbContext)
         {
             _context = dbContext;
@@ -42,7 +46,7 @@ namespace MKTFY.App.Repositories
             {
                 var result = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == id);
                 if (result == null)
-                    throw new NotFoundException("FAQ not found, please check the Id provided", id.ToString());
+                    throw new NotFoundException(_notFoundMsg, id.ToString());
 
                 _context.FAQs.Remove(result);
                 await _context.SaveChangesAsync();
@@ -90,7 +94,7 @@ namespace MKTFY.App.Repositories
         {
             var result = await _context.FAQs.FirstOrDefaultAsync(x => x.Id == id);
             if (result == null)
-                throw new NotFoundException("FAQ not found, please check the Id provided", id.ToString());
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             return new FAQVM(result);
         }
@@ -102,7 +106,7 @@ namespace MKTFY.App.Repositories
 
             var thisFAQ = await _context.FAQs.FirstOrDefaultAsync(x => x.Id == id);
             if (thisFAQ == null)
-                throw new NotFoundException("FAQ not found, please check the Id provided", id.ToString());
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             thisFAQ.Text = src.Text;
             thisFAQ.Title = src.Title;
@@ -111,5 +115,6 @@ namespace MKTFY.App.Repositories
 
             return new FAQVM(thisFAQ);
         }
+
     }
 }
