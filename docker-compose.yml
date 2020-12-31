@@ -11,7 +11,6 @@ services:
       - "25000:80"
       - "25001:443"
     environment:
-      #- ConnectionStrings__DefaultConnection=Server=lppmktfy-rds.c1jfu3fqwoj9.ca-central-1.rds.amazonaws.com;Database=mktfy_db;User Id=mktfyAdmin;password=NotAPassword
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
       - SendGrid=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
@@ -30,7 +29,6 @@ services:
       - "24000:80"
       - "24001:443"
     environment:
-      #- ConnectionStrings__DefaultConnection=Server=lppmktfy-rds.c1jfu3fqwoj9.ca-central-1.rds.amazonaws.com;Database=mktfy_db;User Id=mktfyAdmin;password=NotAPassword
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
     depends_on:

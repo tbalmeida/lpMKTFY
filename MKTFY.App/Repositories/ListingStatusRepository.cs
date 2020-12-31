@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,15 +18,22 @@ namespace MKTFY.App.Repositories
 
         public async Task<List<ListingStatusVM>> GetAll()
         {
-            var results = await _context.ListingStatuses.ToListAsync();
-
-            var models = new List<ListingStatusVM>();
-            foreach (var item in results)
+            try
             {
-                models.Add(new ListingStatusVM(item));
-            }
+                var results = await _context.ListingStatuses.ToListAsync();
 
-            return models;
+                var models = new List<ListingStatusVM>();
+                foreach (var item in results)
+                {
+                    models.Add(new ListingStatusVM(item));
+                }
+
+                return models;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retrieving Listing Statuses. " + ex.Message);
+            }
         }
     }
 }
