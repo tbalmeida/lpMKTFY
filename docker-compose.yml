@@ -13,7 +13,6 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
-      - SendGrid=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
       - DefaultEmail=thiago@launchpadbyvog.com
 
     depends_on:
