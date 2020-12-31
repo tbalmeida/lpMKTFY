@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
@@ -12,6 +13,9 @@ namespace MKTFY.App.Repositories
     public class CityRepository : ICityRepository
     {
         private readonly ApplicationDbContext _context;
+
+        // Error message
+        private readonly string _notFoundMsg = "City not found, please check the Id provided";
 
         public CityRepository(ApplicationDbContext dbContext)
         {
@@ -37,43 +41,40 @@ namespace MKTFY.App.Repositories
 
         public async Task<string> Delete(int id)
         {
-            try
-            {
                 var result = await _context.Cities.FirstOrDefaultAsync(f => f.Id == id);
                 if (result == null)
-                {
-                    return "City not found";
-                }
+                    throw new NotFoundException(_notFoundMsg, id.ToString());
+
                 _context.Cities.Remove(result);
                 await _context.SaveChangesAsync();
                 return "City deleted";
-            }
-            catch
-            {
-                throw new Exception("Error when deleting FAQ");
-            }
         }
 
         public async Task<List<CityVM>> GetAll()
         {
-            var results = await _context.Cities.OrderBy(city=> city.Name).ToListAsync();
-
-            var models = new List<CityVM>();
-            foreach (var entity in results)
+            try
             {
-                models.Add(new CityVM(entity));
-            }
+                var results = await _context.Cities.OrderBy(city=> city.Name).ToListAsync();
 
-            return models;
+                var models = new List<CityVM>();
+                foreach (var entity in results)
+                {
+                    models.Add(new CityVM(entity));
+                }
+
+                return models;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while retrieving Cities.");
+            }
         }
 
         public async Task<CityVM> GetById(int id)
         {
             var result = await _context.Cities.FirstOrDefaultAsync(c => c.Id == id);
             if (result == null)
-            {
-                throw new Exception("City not found");
-            }
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             return new CityVM(result);
         }
@@ -81,15 +82,11 @@ namespace MKTFY.App.Repositories
         public async Task<CityVM> Update(int id, CityUpdateVM src)
         {
             if (id != src.Id)
-            {
-                throw new Exception("Invalid data");
-            }
+                throw new MismatchingId(id.ToString());
 
             var currentEntity = await _context.Cities.FirstOrDefaultAsync(city => city.Id == id);
             if (currentEntity == null)
-            {
-                throw new Exception("City not found");
-            }
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             currentEntity.Name = src.Name;
             currentEntity.ProvinceId = src.ProvinceId;

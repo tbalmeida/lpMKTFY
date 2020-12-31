@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
@@ -13,6 +14,9 @@ namespace MKTFY.App.Repositories
     public class ListingRepository : IListingRepository
     {
         private readonly ApplicationDbContext _context;
+
+        // Error message
+        private readonly string _notFoundMsg = "Listing not found, please check the Id provided";
 
         public ListingRepository(ApplicationDbContext dbContext)
         {
@@ -32,7 +36,7 @@ namespace MKTFY.App.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Error on Listing creation\n" + ex.Message);
+                throw new Exception("Error on Listing creation. " + ex.Message);
             }
         }
 
@@ -42,9 +46,7 @@ namespace MKTFY.App.Repositories
             {
                 var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
                 if (result == null)
-                {
-                    return "Listing not found";
-                }
+                    throw new NotFoundException( _notFoundMsg, id.ToString() );
 
                 // TBI - add deletion of images and transactions
 
@@ -53,9 +55,9 @@ namespace MKTFY.App.Repositories
 
                 return "Listing deleted";
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.GetType().Name != "NotFoundException")
             {
-                throw new Exception("Error when deleting Listing\n" + ex.Message);
+                throw new Exception("Error when deleting Listing. " + ex.Message);
             }
         }
 
@@ -81,9 +83,7 @@ namespace MKTFY.App.Repositories
 
             // filter by City
             if ( searchCity.HasValue)
-            {
                 query = query.Where(item => item.CityId == searchCity);
-            }
 
             // filter by Listing Status
             searchStatus = searchStatus.HasValue ? searchStatus : 1;
@@ -91,15 +91,11 @@ namespace MKTFY.App.Repositories
 
             // filter by Category
             if (searchCategory.HasValue)
-            {
                 query = query.Where(item => item.CategoryId == searchCategory);
-            }
 
             // filter by Item Condition
             if (searchItemCond.HasValue)
-            {
                 query = query.Where(item => item.ItemConditionId == searchItemCond);
-            }
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
 
@@ -114,7 +110,6 @@ namespace MKTFY.App.Repositories
 
         public async Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
         {
-            // TBI - filters
             var query = _context.Listings
                 .Include(item => item.Category)
                 .Include(item => item.ItemCondition)
@@ -135,9 +130,7 @@ namespace MKTFY.App.Repositories
 
             // filter by City
             if (searchCity.HasValue)
-            {
                 query = query.Where(item => item.CityId == searchCity);
-            }
 
             // filter by Listing Status
             searchStatus = searchStatus.HasValue ? searchStatus : 1;
@@ -145,15 +138,11 @@ namespace MKTFY.App.Repositories
 
             // filter by Category
             if (searchCategory.HasValue)
-            {
                 query = query.Where(item => item.CategoryId == searchCategory);
-            }
 
             // filter by Item Condition
             if (searchItemCond.HasValue)
-            {
                 query = query.Where(item => item.ItemConditionId == searchItemCond);
-            }
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
 
@@ -177,9 +166,7 @@ namespace MKTFY.App.Repositories
                 .FirstOrDefaultAsync(lst => lst.Id == id);
 
             if (result == null)
-            {
-                throw new Exception("Listing not found");
-            }
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             return new ListingVM(result);
         }
@@ -187,15 +174,11 @@ namespace MKTFY.App.Repositories
         public async Task<ListingVM> Update(Guid id, ListingUpdateVM src)
         {
             if (id != src.Id)
-            {
-                throw new Exception("Invalid data");
-            }
+                throw new MismatchingId(id.ToString());
 
             var curListing = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
             if (curListing == null)
-            {
-                throw new Exception("Listing not found");
-            }
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             curListing.Title = src.Title;
             curListing.Description = src.Description;
@@ -215,9 +198,7 @@ namespace MKTFY.App.Repositories
 
             var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
             if (result == null)
-            {
-                throw new Exception("Listing not found");
-            }
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             result.Price = src.Price;
             await _context.SaveChangesAsync();
@@ -230,9 +211,7 @@ namespace MKTFY.App.Repositories
 
             var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
             if (result == null)
-            {
-                throw new Exception("Listing not found");
-            }
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
             result.ListingStatusId = src.ListingStatusId;
             await _context.SaveChangesAsync();

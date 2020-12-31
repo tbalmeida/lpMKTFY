@@ -5,7 +5,6 @@ using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MKTFY.App.Repositories
@@ -39,7 +38,7 @@ namespace MKTFY.App.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while creating Category.\n" + ex.Message);
+                throw new Exception("Error while creating Category. " + ex.Message);
             }
         }
 
@@ -59,7 +58,7 @@ namespace MKTFY.App.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while retrieving Categories.\n" + ex.Message);
+                throw new Exception("Error while retrieving Categories. " + ex.Message);
             }
         }
 
@@ -75,7 +74,7 @@ namespace MKTFY.App.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while retrieving Category.\n" + ex.Message);
+                throw new Exception("Error while retrieving a Category. " + ex.Message);
             }
         }
 
@@ -95,7 +94,7 @@ namespace MKTFY.App.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while updating a Category.\n" + ex.Message);
+                throw new NotFoundException( _notFoundMsg, id.ToString() );
             }
         }
 

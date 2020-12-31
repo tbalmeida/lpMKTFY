@@ -3,7 +3,6 @@ using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MKTFY.Api.Controllers
@@ -23,152 +22,57 @@ namespace MKTFY.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<ListingVM>> Create(ListingCreateVM src)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid data");
-            }
-
-            try
-            {
-                var result = await _listingRepository.Create(src);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error on Listing creation\n" + ex.Message);
-            }
+            var result = await _listingRepository.Create(src);
+            return Ok(result);
         }
         
         [HttpGet]
         public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
         {
-            try
-            {
-                var results = await _listingRepository.GetListings(sTxt, sCty, sSts, sCat, sIC);
-                return Ok(results);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var results = await _listingRepository.GetListings(sTxt, sCty, sSts, sCat, sIC);
+            return Ok(results);
         }
 
         [HttpGet("short")]
         public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
         {
-            try
-            {
-                var results = await _listingRepository.GetListingsShort(sTxt, sCty, sSts, sCat, sIC);
-                return Ok(results);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var results = await _listingRepository.GetListingsShort(sTxt, sCty, sSts, sCat, sIC);
+            return Ok(results);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ListingVM>> GetById([FromRoute] Guid id)
         {
-            try
-            {
-                var results = await _listingRepository.GetById(id);
-                return Ok(results);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var results = await _listingRepository.GetById(id);
+            return Ok(results);
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult<ListingVM>> Update([FromRoute] Guid id, [FromBody] ListingUpdateVM src)
         {
-            if (!ModelState.IsValid || id != src.Id)
-            {
-                return BadRequest("Invalid data");
-            }
-
-            try
-            {
-                var result = await _listingRepository.Update(id, src);
-                return Ok(result);
-            }
-            catch(Exception ex)
-            {
-                if (ex.Message == "Listing not found")
-                {
-                    return NotFound("Listing not found");
-                }
-
-                return BadRequest("Error on Listing update\n" + ex.Message);
-            }
+            var result = await _listingRepository.Update(id, src);
+            return Ok(result);
         }
 
         [HttpPatch("{id}/price")]
         public async Task<ActionResult<ListingVM>> UpdatePrice([FromRoute] Guid id, [FromBody] ListingUpdatePriceVM src)
         {
-            if (!ModelState.IsValid || id != src.Id)
-            {
-                return BadRequest("Invalid data");
-            }
-
-            try
-            {
-                var result = await _listingRepository.UpdatePrice(id, src);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "Listing not found")
-                {
-                    return NotFound("Listing not found");
-                }
-
-                return BadRequest("Error on Listing update\n" + ex.Message);
-            }
+            var result = await _listingRepository.UpdatePrice(id, src);
+            return Ok(result);
         }
 
         [HttpPatch("{id}/status")]
         public async Task<ActionResult<ListingVM>> UpdateStatus(Guid id, ListingUpdateStatusVM src)
         {
-            if (!ModelState.IsValid || id != src.Id)
-            {
-                return BadRequest("Invalid data");
-            }
-
-            try
-            {
-                var result = await _listingRepository.UpdateStatus(id, src);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message == "Listing not found")
-                {
-                    return NotFound("Listing not found");
-                }
-
-                return BadRequest("Error on Listing update\n" + ex.Message);
-            }
+            var result = await _listingRepository.UpdateStatus(id, src);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<string>> Delete([FromRoute] Guid id)
         {
-            try
-            {
-                var result = await _listingRepository.Delete(id);
-                if ( result == "Listing not found" )
-                {
-                    return NotFound("Listing not found");
-                }
-                return Ok(result);
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var result = await _listingRepository.Delete(id);
+            return Ok(result);
         }
     }
 }

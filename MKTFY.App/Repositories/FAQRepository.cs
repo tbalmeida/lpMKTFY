@@ -25,57 +25,36 @@ namespace MKTFY.App.Repositories
 
         public async Task<FAQVM> Create(FAQCreateVM src)
         {
-            try
-            {
-                var entity = new FAQ(src);
+            var entity = new FAQ(src);
 
-                await _context.FAQs.AddAsync(entity);
-                await _context.SaveChangesAsync();
+            await _context.FAQs.AddAsync(entity);
+            await _context.SaveChangesAsync();
 
-                return new FAQVM(entity);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error on FAQ creation.\n" + ex.Message);
-            }
+            return new FAQVM(entity);
         }
 
         public async Task<string> Delete(Guid id)
         {
-            try
-            {
-                var result = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == id);
-                if (result == null)
-                    throw new NotFoundException(_notFoundMsg, id.ToString());
+            var result = await _context.FAQs.FirstOrDefaultAsync(f => f.Id == id);
+            if (result == null)
+                throw new NotFoundException(_notFoundMsg, id.ToString());
 
-                _context.FAQs.Remove(result);
-                await _context.SaveChangesAsync();
+            _context.FAQs.Remove(result);
+            await _context.SaveChangesAsync();
 
-                return "FAQ deleted";
-            }
-            catch
-            {
-                throw new Exception("Error when deleting FAQ");
-            }
+            return "FAQ deleted";
         }
 
         public async Task<List<FAQVM>> FilterFAQ(string searchTerm = null)
         {
-            try
-            {
-                var results = await _context.FAQs.Where(fq => fq.Title.ToLower().Contains(searchTerm.ToLower()) || fq.Text.ToLower().Contains(searchTerm.ToLower())).ToListAsync();
+            var results = await _context.FAQs.Where(fq => fq.Title.ToLower().Contains(searchTerm.ToLower()) || fq.Text.ToLower().Contains(searchTerm.ToLower())).ToListAsync();
 
-                var models = new List<FAQVM>();
-                foreach (var entity in results)
-                {
-                    models.Add(new FAQVM(entity));
-                }
-                return models;
-            }
-            catch
+            var models = new List<FAQVM>();
+            foreach (var entity in results)
             {
-                throw new Exception("Error on FAQs search.");
+                models.Add(new FAQVM(entity));
             }
+            return models;
         }
 
         public async Task<List<FAQVM>> GetAll()
