@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon;
 
 namespace MKTFY.api
 {
@@ -47,6 +50,18 @@ namespace MKTFY.api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                .ConfigureAppConfiguration( (builder) =>
+                {
+                    var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                    if (env != "Development")
+                    {
+                        builder.AddSystemsManager(String.Format("/MKTFY/{0}", env), new AWSOptions
+                        {
+                            Region = RegionEndpoint.CACentral1
+                        });
+                    }
+                }
+            );
     }
 }

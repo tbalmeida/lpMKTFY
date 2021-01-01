@@ -11,6 +11,7 @@ services:
       - "25000:80"
       - "25001:443"
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
       - DefaultEmail=thiago@launchpadbyvog.com
@@ -28,6 +29,7 @@ services:
       - "24000:80"
       - "24001:443"
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
     depends_on:
