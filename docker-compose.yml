@@ -14,9 +14,6 @@ services:
       - .aws:/root/.aws
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
-      - Identity__Authority=http://mktfy.auth
-      - DefaultEmail=thiago@launchpadbyvog.com
     depends_on:
       - "mktfy.db"
 
@@ -33,8 +30,6 @@ services:
       - "24001:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
-      - Identity__Authority=http://mktfy.auth
     depends_on:
       - "mktfy.db"
 

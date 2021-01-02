@@ -29,7 +29,7 @@ namespace MKTFY.Auth
                     var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                     if (env == "Development")
                     {
-                        builder.AddSystemsManager(String.Format("/MKTFY/{0}", env), new AWSOptions
+                        builder.AddSystemsManager(String.Format("/MKTFY/{0}/", env), new AWSOptions
                         {
                             Region = RegionEndpoint.CACentral1,
                             Profile = "default"
@@ -37,7 +37,7 @@ namespace MKTFY.Auth
                     }
                     else
                     {
-                        builder.AddSystemsManager(String.Format("/MKTFY/{0}", env), new AWSOptions
+                        builder.AddSystemsManager(String.Format("/MKTFY/{0}/", env), new AWSOptions
                         {
                             Region = RegionEndpoint.CACentral1
                         });

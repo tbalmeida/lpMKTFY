@@ -30,10 +30,12 @@ namespace MKTFY.Api.Controllers
         public async Task<bool> SendEmailMsg(ContactUsVM src)
         {
             // SendgGrid config - using default email as sender
-            var apiKey = Environment.GetEnvironmentVariable("SendGrid");
+            var apiKey = Environment.GetEnvironmentVariable("SGSettings__SendGrid");
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress(Environment.GetEnvironmentVariable("DefaultEmail"), "MKTFY CST");
-            var to = new EmailAddress(Environment.GetEnvironmentVariable("DefaultEmail"), "MKTFY CST");
+
+            var defAddress = Environment.GetEnvironmentVariable("SGSettings__DefaultEmail");
+            var from = new EmailAddress(defAddress, "MKTFY CST");
+            var to = new EmailAddress(defAddress, "MKTFY CST");
 
             var subject = "MKTFY Contact Us - " + src.Subject;
             var plainTextContent = $"Message from: {src.FullName} ({src.FullName})" +
