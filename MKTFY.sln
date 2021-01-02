@@ -15,6 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MKTFY.Auth", "MKTFY.Auth\MK
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A50D18DC-70A8-4A2C-8E66-592887606F0E}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		buildspec.api.yml = buildspec.api.yml
 		buildspec.auth.yml = buildspec.auth.yml
 		Dockerrun.aws.json = Dockerrun.aws.json

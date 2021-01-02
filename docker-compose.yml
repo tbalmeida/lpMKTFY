@@ -10,12 +10,13 @@ services:
     ports:
       - "25000:80"
       - "25001:443"
+    volumes:
+      - .aws:/root/.aws
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=mktfy.db;Database=devdb;User Id=devdbuser;password=devdbpassword
       - Identity__Authority=http://mktfy.auth
       - DefaultEmail=thiago@launchpadbyvog.com
-
     depends_on:
       - "mktfy.db"
 
@@ -25,6 +26,8 @@ services:
     build:
       context: .
       dockerfile: MKTFY.Auth/Dockerfile
+    volumes:
+      - .aws:/root/.aws
     ports:
       - "24000:80"
       - "24001:443"
@@ -50,3 +53,4 @@ services:
 
 volumes:
   launchpad-db:
+  .aws:

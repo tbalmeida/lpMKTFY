@@ -27,12 +27,21 @@ namespace MKTFY.Auth
                 .ConfigureAppConfiguration((builder) =>
                 {
                     var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                    if (env != "Development")
+                    if (env == "Development")
+                    {
+                        builder.AddSystemsManager(String.Format("/MKTFY/{0}", env), new AWSOptions
+                        {
+                            Region = RegionEndpoint.CACentral1,
+                            Profile = "default"
+                        });
+                    }
+                    else
                     {
                         builder.AddSystemsManager(String.Format("/MKTFY/{0}", env), new AWSOptions
                         {
                             Region = RegionEndpoint.CACentral1
                         });
+
                     }
                 }
             );
