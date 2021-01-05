@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System;
 using System.Threading.Tasks;
 
 namespace MKTFY.Api.Controllers
@@ -11,42 +9,30 @@ namespace MKTFY.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ContactUsController : Controller
+    public class ContactUsController : ControllerBase
     {
+        private readonly IContactUsRepository _contactUsRepository;
+
+        public ContactUsController(IContactUsRepository contactUsRepository)
+        {
+            _contactUsRepository = contactUsRepository;
+        }
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult<string>> SendMsg([FromBody] ContactUsVM src)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Please, verify the data provided");
-            }
-            
-            await SendEmailMsg(src);
-            return Ok("Message delivered successfully");
-        }
-
-        public async Task<bool> SendEmailMsg(ContactUsVM src)
+        public async Task<ActionResult<bool>> SendEmailMsg([FromBody] ContactUsVM src)
         {
             // SendgGrid config - using default email as sender
-            var apiKey = Environment.GetEnvironmentVariable("SGSettings__SendGrid");
-            var client = new SendGridClient(apiKey);
+            var result = await _contactUsRepository.SendEmailMsg(src);
 
-            var defAddress = Environment.GetEnvironmentVariable("SGSettings__DefaultEmail");
-            var from = new EmailAddress(defAddress, "MKTFY CST");
-            var to = new EmailAddress(defAddress, "MKTFY CST");
-
-            var subject = "MKTFY Contact Us - " + src.Subject;
-            var plainTextContent = $"Message from: {src.FullName} ({src.FullName})" +
-                $"\n{src.TextContent}";
-
-            var htmlContent = $"<strong>Message from</strong> {src.FullName} ({src.FullName})" +
-                $"<p>{src.TextContent}</p>";
-
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            await client.SendEmailAsync(msg);
-            return true;
+            if (result)
+            {
+                return Ok("Message sent, thank you for your contact");
+            }
+            else
+            {
+                return BadRequest("Message not sent, sorry");
+            }
         }
     }
 }

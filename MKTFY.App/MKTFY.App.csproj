@@ -17,8 +17,6 @@
     <Compile Remove="Migrations\20201214234539_AddEntities.Designer.cs" />
     <Compile Remove="Migrations\20201220164758_DelListingTimestamp.cs" />
     <Compile Remove="Migrations\20201220164758_DelListingTimestamp.Designer.cs" />
-    <Compile Remove="Repositories\ContactUsRepository.cs" />
-    <Compile Remove="Repositories\Interfaces\IContactUsRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+    <PackageReference Include="SendGrid" Version="9.22.0" />
   </ItemGroup>
 
   <ItemGroup>
