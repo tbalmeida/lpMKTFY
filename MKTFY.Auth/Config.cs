@@ -1,10 +1,7 @@
 ﻿using IdentityServer4;
 using IdentityServer4.Models;
-using IdentityServer4.Test;
-using System;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MKTFY.Auth
 {
@@ -27,8 +24,10 @@ namespace MKTFY.Auth
                 new ApiScope("mktfyapi.scope", "MKTFY API")
             };
 
-        public static IEnumerable<Client> Clients =>
-            new List<Client>
+
+        public static IEnumerable<Client> Clients(IConfiguration config)
+        {
+            return new List<Client>
             {
                 new Client
                 {
@@ -37,10 +36,13 @@ namespace MKTFY.Auth
 
                     ClientSecrets =
                     {
-                        new Secret("UzKjRFnAHffxUFati8HMjSEzwMGgGHmN".Sha256())
+                        new Secret(config.GetSection("Identity")
+                                         .GetValue<string>("Secret")
+                                         .Sha256())
                     },
                     AllowedScopes = { "mktfyapi.scope", IdentityServerConstants.StandardScopes.OpenId }
                 }
             };
+        }
     }
 }

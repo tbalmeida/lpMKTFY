@@ -48,7 +48,7 @@ namespace MKTFY.Auth
                .AddDeveloperSigningCredential()
                .AddInMemoryApiResources(Config.ApiResources)
                .AddInMemoryApiScopes(Config.ApiScopes)
-               .AddInMemoryClients(Config.Clients)
+               .AddInMemoryClients(Config.Clients(Configuration))
                .AddAspNetIdentity<User>();
         }
 
