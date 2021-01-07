@@ -63,41 +63,7 @@ namespace MKTFY.App.Repositories
 
         public async Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
         {
-            var query = _context.Listings
-                .Include(item => item.Category)
-                .Include(item => item.ItemCondition)
-                .Include(item => item.ListingStatus)
-                .Include(item => item.City)
-                .Include(item => item.User)
-                .AsQueryable();
-
-            // Filter by text
-            if ( !searchText.IsNullOrEmpty() )
-            {
-                var lowerSearchText = searchText.ToLower();
-                query = query.Where(item => 
-                    item.Title.ToLower().Contains(lowerSearchText)
-                    || item.Description.ToLower().Contains(lowerSearchText)
-                );
-            }
-
-            // filter by City
-            if ( searchCity.HasValue)
-                query = query.Where(item => item.CityId == searchCity);
-
-            // filter by Listing Status
-            searchStatus = searchStatus.HasValue ? searchStatus : 1;
-            query = query.Where(item => item.ListingStatusId == searchStatus);
-
-            // filter by Category
-            if (searchCategory.HasValue)
-                query = query.Where(item => item.CategoryId == searchCategory);
-
-            // filter by Item Condition
-            if (searchItemCond.HasValue)
-                query = query.Where(item => item.ItemConditionId == searchItemCond);
-
-            var results = await query.OrderBy(lst => lst.Created).ToListAsync();
+            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond);
 
             var models = new List<ListingVM>();
             foreach (var item in results)
@@ -110,41 +76,7 @@ namespace MKTFY.App.Repositories
 
         public async Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
         {
-            var query = _context.Listings
-                .Include(item => item.Category)
-                .Include(item => item.ItemCondition)
-                .Include(item => item.ListingStatus)
-                .Include(item => item.City)
-                .Include(item => item.User)
-                .AsQueryable();
-
-            // Filter by text
-            if (!searchText.IsNullOrEmpty())
-            {
-                var lowerSearchText = searchText.ToLower();
-                query = query.Where(item =>
-                    item.Title.ToLower().Contains(lowerSearchText)
-                    || item.Description.ToLower().Contains(lowerSearchText)
-                );
-            }
-
-            // filter by City
-            if (searchCity.HasValue)
-                query = query.Where(item => item.CityId == searchCity);
-
-            // filter by Listing Status
-            searchStatus = searchStatus.HasValue ? searchStatus : 1;
-            query = query.Where(item => item.ListingStatusId == searchStatus);
-
-            // filter by Category
-            if (searchCategory.HasValue)
-                query = query.Where(item => item.CategoryId == searchCategory);
-
-            // filter by Item Condition
-            if (searchItemCond.HasValue)
-                query = query.Where(item => item.ItemConditionId == searchItemCond);
-
-            var results = await query.OrderBy(lst => lst.Created).ToListAsync();
+            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond);
 
             var models = new List<ListingShortVM>();
             foreach (var item in results)
@@ -217,6 +149,46 @@ namespace MKTFY.App.Repositories
             await _context.SaveChangesAsync();
 
             return new ListingVM(result);
+        }
+
+        public async Task<List<Listing>> FilterListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
+        {
+            var query = _context.Listings
+                .Include(item => item.Category)
+                .Include(item => item.ItemCondition)
+                .Include(item => item.ListingStatus)
+                .Include(item => item.City)
+                .Include(item => item.User)
+                .AsQueryable();
+
+            // Filter by text
+            if (!searchText.IsNullOrEmpty())
+            {
+                var lowerSearchText = searchText.ToLower();
+                query = query.Where(item =>
+                    item.Title.ToLower().Contains(lowerSearchText)
+                    || item.Description.ToLower().Contains(lowerSearchText)
+                );
+            }
+
+            // filter by City
+            if (searchCity.HasValue)
+                query = query.Where(item => item.CityId == searchCity);
+
+            // filter by Listing Status
+            searchStatus = searchStatus.HasValue ? searchStatus : 1;
+            query = query.Where(item => item.ListingStatusId == searchStatus);
+
+            // filter by Category
+            if (searchCategory.HasValue)
+                query = query.Where(item => item.CategoryId == searchCategory);
+
+            // filter by Item Condition
+            if (searchItemCond.HasValue)
+                query = query.Where(item => item.ItemConditionId == searchItemCond);
+
+            var results = await query.OrderBy(lst => lst.Created).ToListAsync();
+            return results;
         }
     }
 }
