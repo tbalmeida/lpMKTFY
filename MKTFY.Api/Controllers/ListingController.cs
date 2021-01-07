@@ -27,16 +27,16 @@ namespace MKTFY.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
+        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC, string? sOw)
         {
-            var results = await _listingRepository.GetListings(sTxt, sCty, sSts, sCat, sIC);
+            var results = await _listingRepository.GetListings(sTxt, sCty, sSts, sCat, sIC, sOw);
             return Ok(results);
         }
 
         [HttpGet("short")]
-        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
+        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC, string? sOw)
         {
-            var results = await _listingRepository.GetListingsShort(sTxt, sCty, sSts, sCat, sIC);
+            var results = await _listingRepository.GetListingsShort(sTxt, sCty, sSts, sCat, sIC, sOw);
             return Ok(results);
         }
 

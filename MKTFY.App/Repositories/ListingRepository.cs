@@ -61,9 +61,9 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public async Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
+        public async Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner)
         {
-            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond);
+            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond, owner);
 
             var models = new List<ListingVM>();
             foreach (var item in results)
@@ -74,9 +74,9 @@ namespace MKTFY.App.Repositories
             return models;
         }
 
-        public async Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
+        public async Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner)
         {
-            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond);
+            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond, owner);
 
             var models = new List<ListingShortVM>();
             foreach (var item in results)
@@ -151,7 +151,7 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<List<Listing>> FilterListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond)
+        public async Task<List<Listing>> FilterListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner)
         {
             var query = _context.Listings
                 .Include(item => item.Category)
@@ -170,6 +170,10 @@ namespace MKTFY.App.Repositories
                     || item.Description.ToLower().Contains(lowerSearchText)
                 );
             }
+
+            // Filter by owner
+            if (!owner.IsNullOrEmpty())
+                query = query.Where(item => item.UserId == owner);
 
             // filter by City
             if (searchCity.HasValue)

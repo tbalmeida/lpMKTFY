@@ -1,7 +1,6 @@
 ﻿using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MKTFY.App.Repositories.Interfaces
@@ -16,9 +15,9 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<string> Delete(Guid id);
 
-        Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
+        Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner);
 
-        Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond);
+        Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner);
 
         Task<ListingVM> UpdatePrice(Guid id, ListingUpdatePriceVM src);
 
