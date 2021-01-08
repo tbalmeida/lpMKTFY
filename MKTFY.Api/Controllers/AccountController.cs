@@ -108,5 +108,12 @@ namespace MKTFY.Api.Controllers
             }
             return BadRequest("User already exists");
         }
+
+        [HttpGet("{id}/count")]
+        public async Task<ActionResult<int>> ListCount([FromRoute] string id, [FromQuery] int? status)
+        {
+            var result = await _userRepository.ListingCount(id, status);
+            return Ok(result);
+        }
     }
 }

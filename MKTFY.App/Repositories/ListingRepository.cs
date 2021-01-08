@@ -180,8 +180,8 @@ namespace MKTFY.App.Repositories
                 query = query.Where(item => item.CityId == searchCity);
 
             // filter by Listing Status
-            searchStatus = searchStatus.HasValue ? searchStatus : 1;
-            query = query.Where(item => item.ListingStatusId == searchStatus);
+            if (searchStatus.HasValue)
+                query = query.Where(item => item.ListingStatusId == searchStatus);
 
             // filter by Category
             if (searchCategory.HasValue)

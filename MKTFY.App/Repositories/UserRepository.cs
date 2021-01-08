@@ -3,6 +3,7 @@ using MKTFY.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MKTFY.App.Repositories
 {
@@ -24,5 +25,21 @@ namespace MKTFY.App.Repositories
             return model;
         }
 
+        public async Task<int> ListingCount(string userId, int? status = 1)
+        {
+            var lists = _context.Listings.AsQueryable();
+
+            // filters the user, always
+            lists = lists.Where(x => x.UserId == userId);
+
+            //filters 
+            if (status.HasValue)
+                lists = lists.Where(x => x.ListingStatusId == status);
+
+            // retrieves only the record count
+            var results =  await lists.CountAsync();
+
+            return results;
+        }
     }
 }
