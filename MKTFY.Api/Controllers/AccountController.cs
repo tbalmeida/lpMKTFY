@@ -7,6 +7,7 @@ using MKTFY.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace MKTFY.Api.Controllers
 {
@@ -19,12 +20,15 @@ namespace MKTFY.Api.Controllers
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
 
-        public AccountController(SignInManager<User> signInManager, IConfiguration configuration, IUserRepository userRepository, UserManager<User> userManager)
+        private readonly IListingRepository _listingRepository;
+
+        public AccountController(SignInManager<User> signInManager, IConfiguration configuration, IUserRepository userRepository, UserManager<User> userManager, IListingRepository listingRepository)
         {
             _signInManager = signInManager;
             _configuration = configuration;
             _userRepository = userRepository;
             _userManager = userManager;
+            _listingRepository = listingRepository;
         }
 
         [HttpPost("login")]
@@ -50,29 +54,27 @@ namespace MKTFY.Api.Controllers
             var user = await _userRepository.GetUserByEmail(login.Email).ConfigureAwait(false);
 
             // Get a token from the identity server
-            using (var httpClient = new HttpClient())
+            using var httpClient = new HttpClient();
+            var authority = _configuration.GetSection("Identity").GetValue<string>("Authority");
+
+            // Make the call to our identity server
+            var tokenResponse = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
-                var authority = _configuration.GetSection("Identity").GetValue<string>("Authority");
+                Address = authority + "/connect/token",
+                UserName = login.Email,
+                Password = login.Password,
+                ClientId = login.ClientId,
+                ClientSecret = "UzKjRFnAHffxUFati8HMjSEzwMGgGHmN",
+                Scope = "mktfyapi.scope"
 
-                // Make the call to our identity server
-                var tokenResponse = await httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
-                {
-                    Address = authority + "/connect/token",
-                    UserName = login.Email,
-                    Password = login.Password,
-                    ClientId = login.ClientId,
-                    ClientSecret = "UzKjRFnAHffxUFati8HMjSEzwMGgGHmN",
-                    Scope = "mktfyapi.scope"
+            }).ConfigureAwait(false);
 
-                }).ConfigureAwait(false);
-
-                if (tokenResponse.IsError)
-                {
-                    return BadRequest("Unable to grant access to user account");
-                }
-
-                return Ok(new LoginResponseVM(tokenResponse, user));
+            if (tokenResponse.IsError)
+            {
+                return BadRequest("Unable to grant access to user account");
             }
+
+            return Ok(new LoginResponseVM(tokenResponse, user));
         }
 
         [HttpPost("signup")]
@@ -113,7 +115,22 @@ namespace MKTFY.Api.Controllers
         public async Task<ActionResult<int>> ListCount([FromRoute] string id, [FromQuery] int? status)
         {
             var result = await _userRepository.ListingCount(id, status);
+            
             return Ok(result);
+        }
+
+        [HttpGet("{id}/listings")]
+        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id)
+        {
+            var results = await _listingRepository.FilterListings(cityId: 0, ownerId: id);
+
+            var models = new List<ListingVM>();
+            foreach (var item in results)
+            {
+                models.Add(new ListingVM(item));
+            }
+
+            return models;
         }
     }
 }

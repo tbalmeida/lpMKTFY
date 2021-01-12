@@ -7,10 +7,12 @@ using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace MKTFY.App.Repositories
 {
+
     public class ListingRepository : IListingRepository
     {
         private readonly ApplicationDbContext _context;
@@ -61,9 +63,9 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public async Task<List<ListingVM>> GetListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner)
+        public async Task<List<ListingVM>> GetListings(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] string ownerId)
         {
-            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond, owner);
+            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, ownerId);
 
             var models = new List<ListingVM>();
             foreach (var item in results)
@@ -74,9 +76,9 @@ namespace MKTFY.App.Repositories
             return models;
         }
 
-        public async Task<List<ListingShortVM>> GetListingsShort(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner)
+        public async Task<List<ListingShortVM>> GetListingsShort(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] string ownerId)
         {
-            var results = await FilterListings(searchText, searchCity, searchStatus, searchCategory, searchItemCond, owner);
+            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, ownerId);
 
             var models = new List<ListingShortVM>();
             foreach (var item in results)
@@ -151,8 +153,9 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<List<Listing>> FilterListings(string searchText, int? searchCity, int? searchStatus, int? searchCategory, int? searchItemCond, string? owner)
+        public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId)
         {
+
             var query = _context.Listings
                 .Include(item => item.Category)
                 .Include(item => item.ItemCondition)
@@ -172,24 +175,24 @@ namespace MKTFY.App.Repositories
             }
 
             // Filter by owner
-            if (!owner.IsNullOrEmpty())
-                query = query.Where(item => item.UserId == owner);
+            if (!ownerId.IsNullOrEmpty())
+                query = query.Where(item => item.UserId == ownerId);
 
             // filter by City
-            if (searchCity.HasValue)
-                query = query.Where(item => item.CityId == searchCity);
+            if (cityId > 0)
+                query = query.Where(item => item.CityId == cityId);
 
             // filter by Listing Status
-            if (searchStatus.HasValue)
-                query = query.Where(item => item.ListingStatusId == searchStatus);
+            if (listingStatusId > 0)
+                query = query.Where(item => item.ListingStatusId == listingStatusId);
 
             // filter by Category
-            if (searchCategory.HasValue)
-                query = query.Where(item => item.CategoryId == searchCategory);
+            if (categoryId > 0)
+                query = query.Where(item => item.CategoryId == categoryId);
 
             // filter by Item Condition
-            if (searchItemCond.HasValue)
-                query = query.Where(item => item.ItemConditionId == searchItemCond);
+            if (itemConditionId > 0)
+                query = query.Where(item => item.ItemConditionId == itemConditionId);
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
             return results;
