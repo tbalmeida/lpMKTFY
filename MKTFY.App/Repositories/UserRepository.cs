@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace MKTFY.App.Repositories
 {
@@ -25,7 +26,7 @@ namespace MKTFY.App.Repositories
             return model;
         }
 
-        public async Task<int> ListingCount(string userId, int? status = 1)
+        public async Task<int> ListingCount(string userId, [Optional] int? status)
         {
             var lists = _context.Listings.AsQueryable();
 

@@ -16,13 +16,15 @@ namespace MKTFY.App.Repositories
     public class ListingRepository : IListingRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
         // Error message
         private readonly string _notFoundMsg = "Listing not found, please check the Id provided";
 
-        public ListingRepository(ApplicationDbContext dbContext)
+        public ListingRepository(ApplicationDbContext dbContext, IUserRepository userRepository)
         {
             _context = dbContext;
+            _userRepository = userRepository;
         }
 
         public async Task<ListingVM> Create(ListingCreateVM src)
@@ -70,7 +72,8 @@ namespace MKTFY.App.Repositories
             var models = new List<ListingVM>();
             foreach (var item in results)
             {
-                models.Add(new ListingVM(item));
+                var qty = await _userRepository.ListingCount(item.UserId, 1);
+                models.Add(new ListingVM(item, qty));
             }
 
             return models;
@@ -102,7 +105,9 @@ namespace MKTFY.App.Repositories
             if (result == null)
                 throw new NotFoundException(_notFoundMsg, id.ToString());
 
-            return new ListingVM(result);
+            var qty = await _userRepository.ListingCount(result.UserId, 1);
+
+            return new ListingVM(result, qty);
         }
 
         public async Task<ListingVM> Update(Guid id, ListingUpdateVM src)

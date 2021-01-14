@@ -1,12 +1,13 @@
 ﻿using MKTFY.Models.Entities;
 using System;
+using System.Linq;
 
 namespace MKTFY.Models.ViewModels
 {
     public class ListingVM
     {
 
-        public ListingVM(Listing src)
+        public ListingVM(Listing src, int activeListings = 0)
         {
             Id = src.Id;
             CategoryId = src.CategoryId;
@@ -27,8 +28,13 @@ namespace MKTFY.Models.ViewModels
             {
                 Updated = (DateTime)src.Updated;
             }
-            Seller = src.User == null ? null : src.User.FirstName + " " + src.User.LastName;
-            DaysPosted = DaysDiff() == 0 ? "Posted today" : "Posted " + DaysDiff().ToString() + " days ago";
+            Seller = src.User == null ? 
+                null : 
+                src.User.FirstName + " " + src.User.LastName;
+            DaysPosted = DaysDiff() == 0 ? 
+                "Posted today" : 
+                "Posted " + DaysDiff().ToString() + " days ago";
+            ActiveListCount = activeListings;
         }
 
 
@@ -45,6 +51,7 @@ namespace MKTFY.Models.ViewModels
         public int ItemConditionId { get; set; }
 
         public string ItemConditionName { get; set; }
+
         public int ListingStatusId { get; set; }
 
         public string StatusName { get; set; }
@@ -72,5 +79,7 @@ namespace MKTFY.Models.ViewModels
             TimeSpan qtDays = DateTime.Now - Created;
             return qtDays.Days;
         }
+
+        public int ActiveListCount { get; set; }
     }
 }

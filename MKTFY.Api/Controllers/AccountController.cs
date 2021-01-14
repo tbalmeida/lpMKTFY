@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace MKTFY.Api.Controllers
 {
@@ -120,9 +121,13 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet("{id}/listings")]
-        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id)
+        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id, [Optional] int statusId)
         {
-            var results = await _listingRepository.FilterListings(cityId: 0, ownerId: id);
+            var results = await _listingRepository.FilterListings(
+                ownerId: id, 
+                listingStatusId: statusId,
+                cityId: 0
+            );
 
             var models = new List<ListingVM>();
             foreach (var item in results)
