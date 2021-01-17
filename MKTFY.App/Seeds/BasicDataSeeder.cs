@@ -38,11 +38,11 @@ namespace MKTFY.App.Seeds
             {
                 var listStatuses = new List<ListingStatus>
                 {
-                    new ListingStatus { Name = "Active"},
-                    new ListingStatus { Name = "Pending"},
-                    new ListingStatus { Name = "Completed"},
-                    new ListingStatus { Name = "Cancelled"},
-                    new ListingStatus { Name = "Archived"}
+                    new ListingStatus { Name = "Active", IsActive = true},
+                    new ListingStatus { Name = "Pending", IsActive = true},
+                    new ListingStatus { Name = "Completed", IsActive = false},
+                    new ListingStatus { Name = "Cancelled", IsActive = false},
+                    new ListingStatus { Name = "Archived", IsActive = false}
                 };
 
                 await dbContext.AddRangeAsync(listStatuses);

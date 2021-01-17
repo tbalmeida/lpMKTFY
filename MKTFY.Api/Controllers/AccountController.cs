@@ -113,26 +113,29 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet("{id}/count")]
-        public async Task<ActionResult<int>> ListCount([FromRoute] string id, [FromQuery] int? status)
+        public async Task<ActionResult<int>> ListCount([FromRoute] string id, [FromQuery] bool activeOnly, [FromQuery] int? status)
         {
-            var result = await _userRepository.ListingCount(id, status);
+            var result = await _userRepository.ListingCount(id, activeOnly, status);
             
             return Ok(result);
         }
 
         [HttpGet("{id}/listings")]
-        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id, [Optional] int statusId)
+        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id, [FromQuery] bool activeOnly, [Optional] int statusId)
         {
             var results = await _listingRepository.FilterListings(
                 ownerId: id, 
                 listingStatusId: statusId,
-                cityId: 0
+                cityId: 0,
+                activeOnly: activeOnly
             );
+
+            var qty = await _userRepository.ListingCount(id, activeOnly, statusId);
 
             var models = new List<ListingVM>();
             foreach (var item in results)
             {
-                models.Add(new ListingVM(item));
+                models.Add(new ListingVM(item, qty));
             }
 
             return models;

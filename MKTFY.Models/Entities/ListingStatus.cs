@@ -11,6 +11,8 @@ namespace MKTFY.Models.Entities
         [Required, MaxLength(10)]
         public string Name { get; set; }
 
+        public bool IsActive { get; set; } = false;
+
         public ICollection<Listing> Listings { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
     }

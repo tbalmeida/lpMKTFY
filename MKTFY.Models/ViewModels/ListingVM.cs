@@ -1,6 +1,5 @@
 ﻿using MKTFY.Models.Entities;
 using System;
-using System.Linq;
 
 namespace MKTFY.Models.ViewModels
 {
@@ -18,11 +17,12 @@ namespace MKTFY.Models.ViewModels
             Description = src.Description;
             UserId = src.UserId;
             CityId = src.CityId;
-            City = src.City == null ? null : src.City.Name;
+            City = src.City == null ? null : src.City.Name + ", " + src.City.Province.Abbreviation;
             Location = src.Location;
             Price = src.Price;
             ListingStatusId = src.ListingStatusId;
             StatusName = src.ListingStatus == null ? null : src.ListingStatus.Name;
+            IsActive = src.ListingStatus.IsActive;
             Created = src.Created;
             if (src.Updated != null)
             {
@@ -36,7 +36,6 @@ namespace MKTFY.Models.ViewModels
                 "Posted " + DaysDiff().ToString() + " days ago";
             ActiveListCount = activeListings;
         }
-
 
         public Guid Id { get; set; }
 
@@ -79,6 +78,8 @@ namespace MKTFY.Models.ViewModels
             TimeSpan qtDays = DateTime.Now - Created;
             return qtDays.Days;
         }
+
+        public bool IsActive { get; set; }
 
         public int ActiveListCount { get; set; }
     }

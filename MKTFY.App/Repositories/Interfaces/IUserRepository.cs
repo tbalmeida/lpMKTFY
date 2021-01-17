@@ -1,5 +1,6 @@
 ﻿using MKTFY.Models.ViewModels;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace MKTFY.App.Repositories.Interfaces
@@ -9,7 +10,7 @@ namespace MKTFY.App.Repositories.Interfaces
         Task<UserVM> GetUserByEmail(string email);
 
         // used to provide a listing count on user profile
-        Task<int> ListingCount(string userId, int? statusId);
+        Task<int> ListingCount(string userId, bool activeOnly, [Optional] int? statusId);
 
         // 
     }

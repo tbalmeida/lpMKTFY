@@ -18,11 +18,11 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<string> Delete(Guid id);
         
-        Task<List<Listing>> FilterListings ([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId);
+        Task<List<Listing>> FilterListings ([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] bool? activeOnly, [Optional] string? ownerId);
 
-        Task<List<ListingVM>> GetListings([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] string ownerId);
+        Task<List<ListingVM>> GetListings([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool? activeOnly, [Optional] string ownerId);
 
-        Task<List<ListingShortVM>> GetListingsShort([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] string ownerId);
+        Task<List<ListingShortVM>> GetListingsShort([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool? activeOnly, [Optional] string ownerId);
 
         Task<ListingVM> UpdatePrice(Guid id, ListingUpdatePriceVM src);
 

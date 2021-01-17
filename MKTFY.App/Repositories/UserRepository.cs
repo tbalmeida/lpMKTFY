@@ -26,16 +26,22 @@ namespace MKTFY.App.Repositories
             return model;
         }
 
-        public async Task<int> ListingCount(string userId, [Optional] int? status)
+        public async Task<int> ListingCount(string userId, bool activeOnly, [Optional] int? status)
         {
-            var lists = _context.Listings.AsQueryable();
+            var lists = _context.Listings
+                .Include(item => item.ListingStatus)
+                .AsQueryable();
 
             // filters the user, always
             lists = lists.Where(x => x.UserId == userId);
 
-            //filters 
-            if (status.HasValue)
+            // Filter active only or a specific status?
+            if (activeOnly)
+            {
+                lists = lists.Where(x => x.ListingStatus.IsActive == activeOnly);
+            } else {
                 lists = lists.Where(x => x.ListingStatusId == status);
+            }
 
             // retrieves only the record count
             var results =  await lists.CountAsync();

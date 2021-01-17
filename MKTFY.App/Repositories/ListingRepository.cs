@@ -65,23 +65,23 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public async Task<List<ListingVM>> GetListings(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] string ownerId)
+        public async Task<List<ListingVM>> GetListings(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool? activeOnly, [Optional] string ownerId)
         {
-            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, ownerId);
+            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, activeOnly, ownerId);
 
             var models = new List<ListingVM>();
             foreach (var item in results)
             {
-                var qty = await _userRepository.ListingCount(item.UserId, 1);
+                var qty = await _userRepository.ListingCount(item.UserId, true);
                 models.Add(new ListingVM(item, qty));
             }
 
             return models;
         }
 
-        public async Task<List<ListingShortVM>> GetListingsShort(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] string ownerId)
+        public async Task<List<ListingShortVM>> GetListingsShort(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool? activeOnly, [Optional] string ownerId)
         {
-            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, ownerId);
+            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, activeOnly, ownerId);
 
             var models = new List<ListingShortVM>();
             foreach (var item in results)
@@ -100,12 +100,13 @@ namespace MKTFY.App.Repositories
                 .Include(item => item.ItemCondition)
                 .Include(item => item.ListingStatus)
                 .Include(item => item.User)
+                .Include(item => item.City.Province)
                 .FirstOrDefaultAsync(lst => lst.Id == id);
 
             if (result == null)
                 throw new NotFoundException(_notFoundMsg, id.ToString());
 
-            var qty = await _userRepository.ListingCount(result.UserId, 1);
+            var qty = await _userRepository.ListingCount(result.UserId, true);
 
             return new ListingVM(result, qty);
         }
@@ -158,7 +159,7 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId)
+        public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] bool? activeOnly, [Optional] string? ownerId)
         {
 
             var query = _context.Listings
@@ -167,6 +168,7 @@ namespace MKTFY.App.Repositories
                 .Include(item => item.ListingStatus)
                 .Include(item => item.City)
                 .Include(item => item.User)
+                .Include(item => item.City.Province)
                 .AsQueryable();
 
             // Filter by text
@@ -198,6 +200,10 @@ namespace MKTFY.App.Repositories
             // filter by Item Condition
             if (itemConditionId > 0)
                 query = query.Where(item => item.ItemConditionId == itemConditionId);
+
+            // filter only active statuses
+            if (activeOnly == true | activeOnly == false)
+                query = query.Where(item => item.ListingStatus.IsActive == activeOnly);
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
             return results;
