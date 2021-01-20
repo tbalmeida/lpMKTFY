@@ -65,9 +65,16 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public async Task<List<ListingVM>> GetListings(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool? activeOnly, [Optional] string ownerId)
+        public async Task<List<ListingVM>> GetListings([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool activeOnly, [Optional] string ownerId)
         {
-            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, activeOnly, ownerId);
+            var results = await FilterListings(
+                activeOnly: activeOnly, 
+                cityId: cityId, 
+                searchText: searchText, 
+                categoryId: categoryId, 
+                itemConditionId: itemConditionId, 
+                listingStatusId: listingStatusId, 
+                ownerId: ownerId);
 
             var models = new List<ListingVM>();
             foreach (var item in results)
@@ -79,9 +86,16 @@ namespace MKTFY.App.Repositories
             return models;
         }
 
-        public async Task<List<ListingShortVM>> GetListingsShort(int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool? activeOnly, [Optional] string ownerId)
+        public async Task<List<ListingShortVM>> GetListingsShort([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool activeOnly, [Optional] string ownerId)
         {
-            var results = await FilterListings(cityId, searchText, categoryId, itemConditionId, listingStatusId, activeOnly, ownerId);
+            var results = await FilterListings(
+                activeOnly: activeOnly,
+                cityId: cityId,
+                searchText: searchText,
+                categoryId: categoryId,
+                itemConditionId: itemConditionId,
+                listingStatusId: listingStatusId,
+                ownerId: ownerId);
 
             var models = new List<ListingShortVM>();
             foreach (var item in results)
@@ -159,7 +173,8 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] bool? activeOnly, [Optional] string? ownerId)
+        // public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId, bool activeOnly = true)
+        public async Task<List<Listing>> FilterListings(int cityId = 0, string searchText = null, int categoryId = 0, int itemConditionId = 0, int listingStatusId = 0, bool activeOnly = true, string ownerId = null)
         {
 
             var query = _context.Listings
@@ -202,8 +217,8 @@ namespace MKTFY.App.Repositories
                 query = query.Where(item => item.ItemConditionId == itemConditionId);
 
             // filter only active statuses
-            if (activeOnly == true | activeOnly == false)
-                query = query.Where(item => item.ListingStatus.IsActive == activeOnly);
+            if (activeOnly)
+                query = query.Where(item => item.ListingStatus.IsActive == true);
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
             return results;

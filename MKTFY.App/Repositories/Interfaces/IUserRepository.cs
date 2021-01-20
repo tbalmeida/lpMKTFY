@@ -12,6 +12,12 @@ namespace MKTFY.App.Repositories.Interfaces
         // used to provide a listing count on user profile
         Task<int> ListingCount(string userId, bool activeOnly, [Optional] int? statusId);
 
-        // 
+        // Show account info
+
+        // Update address
+
+        // Logout
+
+        // Change password
     }
 }

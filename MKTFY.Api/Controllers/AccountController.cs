@@ -121,12 +121,11 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet("{id}/listings")]
-        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id, [FromQuery] bool activeOnly, [Optional] int statusId)
+        public async Task<ActionResult<List<ListingVM>>> GetListings([FromRoute] string id, [Optional] int statusId, [FromQuery] bool activeOnly = true)
         {
             var results = await _listingRepository.FilterListings(
-                ownerId: id, 
+                ownerId: id,
                 listingStatusId: statusId,
-                cityId: 0,
                 activeOnly: activeOnly
             );
 

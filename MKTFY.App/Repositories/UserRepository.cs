@@ -36,7 +36,7 @@ namespace MKTFY.App.Repositories
             lists = lists.Where(x => x.UserId == userId);
 
             // Filter active only or a specific status?
-            if (activeOnly)
+            if (activeOnly || !activeOnly)
             {
                 lists = lists.Where(x => x.ListingStatus.IsActive == activeOnly);
             } else {

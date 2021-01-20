@@ -28,14 +28,14 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int sCty, int sSts, int sCat, int sIC, [Optional] string? sOw)
+        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int sCty, int sSts, int sCat, int sIC, [Optional] string sOw, bool aO = true)
         {
-            var results = await _listingRepository.GetListings(cityId: sCty, searchText: sTxt, categoryId: sCat,itemConditionId: sIC, listingStatusId: sSts, ownerId: sOw);
+            var results = await _listingRepository.GetListings(cityId: sCty, searchText: sTxt, categoryId: sCat,itemConditionId: sIC, listingStatusId: sSts, ownerId: sOw, activeOnly: aO);
             return Ok(results);
         }
 
         [HttpGet("short")]
-        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int sCty, int sSts, int sCat, int sIC, [Optional] string? sOw)
+        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int sCty, int sSts, int sCat, int sIC, [Optional] string sOw)
         {
             var results = await _listingRepository.GetListingsShort(cityId: sCty, searchText: sTxt, categoryId: sCat, itemConditionId: sIC, listingStatusId: sSts, ownerId: sOw);
             return Ok(results);
