@@ -35,18 +35,28 @@ namespace MKTFY.App.Repositories
             // filters the user, always
             lists = lists.Where(x => x.UserId == userId);
 
-            // Filter active only or a specific status?
-            if (activeOnly || !activeOnly)
-            {
-                lists = lists.Where(x => x.ListingStatus.IsActive == activeOnly);
-            } else {
+            // Filter active only
+            if (activeOnly)
+                lists = lists.Where(x => x.ListingStatus.IsActive == true);
+
+            // Filter specific status
+            if (status.HasValue && status > 0)
                 lists = lists.Where(x => x.ListingStatusId == status);
-            }
 
             // retrieves only the record count
             var results =  await lists.CountAsync();
 
             return results;
+        }
+
+        public async Task<UserVM> GetById(string guid)
+        {
+            var result = await _context.Users
+                .Include(item => item.City)
+                .Include(item => item.City.Province)
+                .FirstOrDefaultAsync(user => user.Id == guid);
+
+            return new UserVM(result);
         }
     }
 }

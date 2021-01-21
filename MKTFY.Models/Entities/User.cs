@@ -16,7 +16,6 @@ namespace MKTFY.Models.Entities
             LastName = src.LastName;
             Email = src.Email;
             CityId = src.CityId;
-            QtyActiveListings = 0;
         }
 
         [Required]
@@ -27,8 +26,11 @@ namespace MKTFY.Models.Entities
 
         public int? CityId { get; set; }
 
-        [NotMapped]
-        public int QtyActiveListings { get; set; }
+        [MinLength(6), MaxLength(200)]
+        public string Address { get; set; }
+
+        [MinLength(6), MaxLength(7)]
+        public string PostalCode { get; set; }
 
         // Navigational
         public City City { get; set; }

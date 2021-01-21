@@ -13,7 +13,7 @@ namespace MKTFY.App.Repositories.Interfaces
         Task<int> ListingCount(string userId, bool activeOnly, [Optional] int? statusId);
 
         // Show account info
-
+        Task<UserVM> GetById(string id);
         // Update address
 
         // Logout
