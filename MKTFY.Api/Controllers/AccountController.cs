@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using MKTFY.App.Exceptions;
 
 namespace MKTFY.Api.Controllers
 {
@@ -145,7 +146,24 @@ namespace MKTFY.Api.Controllers
                 models.Add(new ListingVM(item, qty));
             }
 
-            return models;
+            return Ok(models);
+        }
+
+        [HttpPost("{id}")]
+        public async Task<ActionResult<UserVM>> UpdateUser([FromRoute] string id, [FromBody] UserUpdateVM src)
+        {
+            // check if route Id and VM Id match
+            if (id != src.Id)
+                throw new MismatchingId(id);
+
+            // check user credential
+            var thisLogin = await _signInManager.PasswordSignInAsync(src.Email, src.Password, false, true).ConfigureAwait(false);
+            if (!thisLogin.Succeeded)
+                return BadRequest();
+
+            var result = await _userRepository.UpdateUser(src);
+
+            return Ok(result);
         }
     }
 }

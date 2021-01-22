@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Runtime.InteropServices;
+using MKTFY.App.Exceptions;
 
 namespace MKTFY.App.Repositories
 {
@@ -19,10 +20,12 @@ namespace MKTFY.App.Repositories
 
         public async Task<UserVM> GetUserByEmail(string email)
         {
-            List<string> a = new List<string>();
-            var result = await _context.Users.FirstAsync(item => item.Email == email);
+            //List<string> a = new List<string>();
 
-            var model = new UserVM(result);
+            var result = await _context.Users.FirstAsync(item => item.Email == email);
+            int qtyListings = await ListingCount(result.Id, true);
+            var model = new UserVM(result, qtyListings);
+
             return model;
         }
 
@@ -56,7 +59,25 @@ namespace MKTFY.App.Repositories
                 .Include(item => item.City.Province)
                 .FirstOrDefaultAsync(user => user.Id == guid);
 
-            return new UserVM(result);
+            var qtyListings = await ListingCount(guid, true);
+
+            return new UserVM(result, qtyListings);
+        }
+
+        public async Task<UserVM> UpdateUser(UserUpdateVM src)
+        {
+            var currlUser = await _context.Users.FindAsync(src.Id);
+
+            if (currlUser == null)
+                throw new NotFoundException("User not found", src.Id );
+
+            // updates the data
+            currlUser.CityId = src.CityId;
+            currlUser.Address = src.Address;
+            currlUser.PostalCode = src.PostalCode;
+            await _context.SaveChangesAsync();
+
+            return await GetById(src.Id);
         }
     }
 }

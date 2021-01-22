@@ -14,7 +14,9 @@ namespace MKTFY.App.Repositories.Interfaces
 
         // Show account info
         Task<UserVM> GetById(string id);
-        // Update address
+
+        // Update
+        Task<UserVM> UpdateUser(UserUpdateVM src);
 
         // Logout
 

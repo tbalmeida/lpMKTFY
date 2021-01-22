@@ -5,7 +5,7 @@ namespace MKTFY.Models.ViewModels
 {
     public class UserVM
     {
-        public UserVM(User src)
+        public UserVM(User src, int qtyActiveListings = 0)
         {
             Id = src.Id;
             Email = src.Email;
@@ -16,6 +16,7 @@ namespace MKTFY.Models.ViewModels
             City = src.City.Name;
             Province = src.City.Province.Abbreviation;
             PostalCode = src.PostalCode == null ? null : src.PostalCode.Substring(0, 3) + " " + src.PostalCode.Substring(3, 3);
+            QtyActiveListings = qtyActiveListings;
         }
 
         public string Id { get; set; }

@@ -16,6 +16,8 @@ namespace MKTFY.Models.Entities
             LastName = src.LastName;
             Email = src.Email;
             CityId = src.CityId;
+            Address = src.Address;
+            PostalCode = src.PostalCode;
         }
 
         [Required]
