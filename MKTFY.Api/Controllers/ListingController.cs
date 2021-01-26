@@ -3,6 +3,7 @@ using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace MKTFY.Api.Controllers
@@ -25,18 +26,18 @@ namespace MKTFY.Api.Controllers
             var result = await _listingRepository.Create(src);
             return Ok(result);
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
+        public async Task<ActionResult<List<ListingVM>>> GetAll([FromQuery] string sTxt, int sCty, int sSts, int sCat, int sIC, [Optional] string sOw, bool aO = true)
         {
-            var results = await _listingRepository.GetListings(sTxt, sCty, sSts, sCat, sIC);
+            var results = await _listingRepository.GetListings(cityId: sCty, searchText: sTxt, categoryId: sCat,itemConditionId: sIC, listingStatusId: sSts, ownerId: sOw, activeOnly: aO);
             return Ok(results);
         }
 
         [HttpGet("short")]
-        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int? sCty, int? sSts, int? sCat, int? sIC)
+        public async Task<ActionResult<List<ListingShortVM>>> GetListingsShort([FromQuery] string sTxt, int sCty, int sSts, int sCat, int sIC, [Optional] string sOw)
         {
-            var results = await _listingRepository.GetListingsShort(sTxt, sCty, sSts, sCat, sIC);
+            var results = await _listingRepository.GetListingsShort(cityId: sCty, searchText: sTxt, categoryId: sCat, itemConditionId: sIC, listingStatusId: sSts, ownerId: sOw);
             return Ok(results);
         }
 

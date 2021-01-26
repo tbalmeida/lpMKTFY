@@ -6,7 +6,7 @@ namespace MKTFY.Models.ViewModels
     public class ListingVM
     {
 
-        public ListingVM(Listing src)
+        public ListingVM(Listing src, int activeListings = 0)
         {
             Id = src.Id;
             CategoryId = src.CategoryId;
@@ -17,20 +17,25 @@ namespace MKTFY.Models.ViewModels
             Description = src.Description;
             UserId = src.UserId;
             CityId = src.CityId;
-            City = src.City == null ? null : src.City.Name;
+            City = src.City == null ? null : src.City.Name + ", " + src.City.Province.Abbreviation;
             Location = src.Location;
             Price = src.Price;
             ListingStatusId = src.ListingStatusId;
             StatusName = src.ListingStatus == null ? null : src.ListingStatus.Name;
+            IsActive = src.ListingStatus.IsActive;
             Created = src.Created;
             if (src.Updated != null)
             {
                 Updated = (DateTime)src.Updated;
             }
-            Seller = src.User == null ? null : src.User.FirstName + " " + src.User.LastName;
-            DaysPosted = DaysDiff() == 0 ? "Posted today" : "Posted " + DaysDiff().ToString() + " days ago";
+            Seller = src.User == null ? 
+                null : 
+                src.User.FirstName + " " + src.User.LastName;
+            DaysPosted = DaysDiff() == 0 ? 
+                "Posted today" : 
+                "Posted " + DaysDiff().ToString() + " days ago";
+            ActiveListCount = activeListings;
         }
-
 
         public Guid Id { get; set; }
 
@@ -45,6 +50,7 @@ namespace MKTFY.Models.ViewModels
         public int ItemConditionId { get; set; }
 
         public string ItemConditionName { get; set; }
+
         public int ListingStatusId { get; set; }
 
         public string StatusName { get; set; }
@@ -72,5 +78,9 @@ namespace MKTFY.Models.ViewModels
             TimeSpan qtDays = DateTime.Now - Created;
             return qtDays.Days;
         }
+
+        public bool IsActive { get; set; }
+
+        public int ActiveListCount { get; set; }
     }
 }

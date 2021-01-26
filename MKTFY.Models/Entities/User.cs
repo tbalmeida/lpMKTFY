@@ -2,6 +2,7 @@
 using MKTFY.Models.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MKTFY.Models.Entities
 {
@@ -15,6 +16,8 @@ namespace MKTFY.Models.Entities
             LastName = src.LastName;
             Email = src.Email;
             CityId = src.CityId;
+            Address = src.Address;
+            PostalCode = src.PostalCode;
         }
 
         [Required]
@@ -24,6 +27,12 @@ namespace MKTFY.Models.Entities
         public string LastName { get; set; }
 
         public int? CityId { get; set; }
+
+        [MinLength(6), MaxLength(200)]
+        public string Address { get; set; }
+
+        [MinLength(6), MaxLength(7)]
+        public string PostalCode { get; set; }
 
         // Navigational
         public City City { get; set; }

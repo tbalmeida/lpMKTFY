@@ -3,15 +3,17 @@ using System;
 using MKTFY.App;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MKTFY.App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210115171619_AddActiveStatusFlag")]
+    partial class AddActiveStatusFlag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -313,10 +315,6 @@ namespace MKTFY.App.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Address")
-                        .HasColumnType("character varying(200)")
-                        .HasMaxLength(200);
-
                     b.Property<int?>("CityId")
                         .HasColumnType("integer");
 
@@ -361,10 +359,6 @@ namespace MKTFY.App.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("character varying(7)")
-                        .HasMaxLength(7);
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");

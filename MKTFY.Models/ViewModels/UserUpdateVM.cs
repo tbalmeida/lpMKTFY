@@ -2,14 +2,15 @@
 
 namespace MKTFY.Models.ViewModels
 {
-    public class UserCreateVM
+    public class UserUpdateVM
     {
+        [Required]
+        public string Id { get; set; }
+
+        [Required, EmailAddress]
         public string Email { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
+        [Required]
         public string Password { get; set; }
 
         public int? CityId { get; set; }
