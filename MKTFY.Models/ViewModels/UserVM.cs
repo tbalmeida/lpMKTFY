@@ -13,8 +13,8 @@ namespace MKTFY.Models.ViewModels
             LastName = src.LastName;
             Address = src.Address;
             CityId = src.CityId;
-            City = src.City.Name;
-            Province = src.City.Province.Abbreviation;
+            City = src.City == null ? null : src.City.Name;
+            Province = src.City == null ? null : src.City.Province.Abbreviation;
             PostalCode = src.PostalCode == null ? null : src.PostalCode.Substring(0, 3) + " " + src.PostalCode.Substring(3, 3);
             QtyActiveListings = qtyActiveListings;
         }

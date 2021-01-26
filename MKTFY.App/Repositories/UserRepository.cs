@@ -1,28 +1,35 @@
 ﻿using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Runtime.InteropServices;
 using MKTFY.App.Exceptions;
+using Microsoft.AspNetCore.Identity;
+using MKTFY.Models.Entities;
+using System;
 
 namespace MKTFY.App.Repositories
 {
     public class UserRepository: IUserRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserRepository(ApplicationDbContext dbContext)
+        public UserRepository(SignInManager<User> signInManager, ApplicationDbContext dbContext)
         {
             _context = dbContext;
+            _signInManager = signInManager;
         }
 
         public async Task<UserVM> GetUserByEmail(string email)
         {
             //List<string> a = new List<string>();
 
-            var result = await _context.Users.FirstAsync(item => item.Email == email);
+            var result = await _context.Users
+                .Include(user=>user.City)
+                .Include(user=>user.City.Province)
+                .FirstAsync(item => item.Email == email);
             int qtyListings = await ListingCount(result.Id, true);
             var model = new UserVM(result, qtyListings);
 
@@ -78,6 +85,18 @@ namespace MKTFY.App.Repositories
             await _context.SaveChangesAsync();
 
             return await GetById(src.Id);
+        }
+
+        public async Task<bool> IsValid(string email, string password)
+        {
+            // Validate the user login
+            var result = await _signInManager.PasswordSignInAsync(email, password, false, true).ConfigureAwait(false);
+
+            // if the login fails, return false. No details to avoid exploits
+            if (result.IsLockedOut | !result.Succeeded)
+                return false;
+
+            return true;
         }
     }
 }

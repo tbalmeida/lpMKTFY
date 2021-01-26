@@ -18,6 +18,8 @@ namespace MKTFY.App.Repositories.Interfaces
         // Update
         Task<UserVM> UpdateUser(UserUpdateVM src);
 
+        Task<bool> IsValid(string email, string password);
+
         // Logout
 
         // Change password

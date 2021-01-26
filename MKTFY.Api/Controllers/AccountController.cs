@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using MKTFY.App.Exceptions;
+using System;
 
 namespace MKTFY.Api.Controllers
 {
@@ -40,17 +41,10 @@ namespace MKTFY.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid data");
 
-            // Validate the user login
-            var result = await _signInManager.PasswordSignInAsync(login.Email, login.Password, false, true).ConfigureAwait(false);
-
-            if (result.IsLockedOut)
-            {
-                return BadRequest("This user account has been locked out, please try again later");
-            }
-            else if (!result.Succeeded)
-            {
-                return BadRequest("Invalid username/password");
-            }
+            //// Validate the user login
+            var result = await _userRepository.IsValid(login.Email, login.Password);
+            if (!result)
+                return StatusCode(401);
 
             // Get the user profile
             var user = await _userRepository.GetUserByEmail(login.Email).ConfigureAwait(false);
@@ -157,9 +151,9 @@ namespace MKTFY.Api.Controllers
                 throw new MismatchingId(id);
 
             // check user credential
-            var thisLogin = await _signInManager.PasswordSignInAsync(src.Email, src.Password, false, true).ConfigureAwait(false);
-            if (!thisLogin.Succeeded)
-                return BadRequest();
+            var loginOk = await _userRepository.IsValid(src.Email, src.Password);
+            if (!loginOk)
+                return StatusCode(401);
 
             var result = await _userRepository.UpdateUser(src);
 
