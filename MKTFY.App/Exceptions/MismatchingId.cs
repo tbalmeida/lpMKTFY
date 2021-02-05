@@ -12,7 +12,7 @@ namespace MKTFY.App.Exceptions
             _id = id;
         }
 
-        public string id
+        public string Id
         {
             get
             {

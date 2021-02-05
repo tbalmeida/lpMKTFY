@@ -39,7 +39,7 @@ namespace MKTFY.App.Middleware
 
                     case MismatchingId e:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;   //400
-                        id = e.id;
+                        id = e.Id;
                         break;
 
                     default:
@@ -50,7 +50,7 @@ namespace MKTFY.App.Middleware
                 // return the response
                 var result = id == null ? 
                         JsonSerializer.Serialize(new { message = errorMessage }) 
-                    :   JsonSerializer.Serialize(new { message = errorMessage, id = id });
+                    :   JsonSerializer.Serialize(new { message = errorMessage, id });
 
                 await response.WriteAsync(result);
             }
