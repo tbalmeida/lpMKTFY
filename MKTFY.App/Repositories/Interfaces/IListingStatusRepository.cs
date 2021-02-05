@@ -7,5 +7,7 @@ namespace MKTFY.App.Repositories.Interfaces
     public interface IListingStatusRepository
     {
         Task<List<ListingStatusVM>> GetAll();
+
+        Task<int> GetStatusId(string name);
     }
 }

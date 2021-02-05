@@ -35,5 +35,15 @@ namespace MKTFY.App.Repositories
                 throw new Exception("Error while retrieving Listing Statuses. " + ex.Message);
             }
         }
+
+        public async Task<int> GetStatusId(string name)
+        {
+            var result = await _context.ListingStatuses.FirstOrDefaultAsync(item => item.Name == name);
+
+            if (result == null)
+                return -1;
+
+            return result.Id;
+        }
     }
 }
