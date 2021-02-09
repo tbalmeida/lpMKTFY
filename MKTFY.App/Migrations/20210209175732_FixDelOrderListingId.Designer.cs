@@ -3,15 +3,17 @@ using System;
 using MKTFY.App;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MKTFY.App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210209175732_FixDelOrderListingId")]
+    partial class FixDelOrderListingId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,10 +255,9 @@ namespace MKTFY.App.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ListingId")
-                        .HasColumnType("uuid");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("integer");
@@ -264,8 +265,6 @@ namespace MKTFY.App.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BuyerId");
-
-                    b.HasIndex("ListingId");
 
                     b.HasIndex("OrderStatusId");
 
@@ -570,12 +569,6 @@ namespace MKTFY.App.Migrations
                     b.HasOne("MKTFY.Models.Entities.User", "Buyer")
                         .WithMany("Orders")
                         .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKTFY.Models.Entities.Listing", "Listing")
-                        .WithMany("Orders")
-                        .HasForeignKey("ListingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

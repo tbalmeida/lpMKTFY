@@ -31,7 +31,9 @@ namespace MKTFY.api
             
             // Set up the database
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),
+                options.UseNpgsql(
+                     Configuration.GetConnectionString("DefaultConnection"),   
+                    // "Host=localhost;Port=26000;Database=devdb;User Id=devdbuser;Password=devdbpassword",
                 b =>
                 {
                     b.MigrationsAssembly("MKTFY.App");

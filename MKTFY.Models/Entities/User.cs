@@ -37,5 +37,8 @@ namespace MKTFY.Models.Entities
         // Navigational
         public City City { get; set; }
         public ICollection<Listing> Listings { get; set; }
+
+        [InverseProperty("Buyer")]
+        public ICollection<Order> Orders { get; set; }
     }
 }

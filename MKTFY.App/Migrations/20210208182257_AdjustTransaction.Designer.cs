@@ -3,15 +3,17 @@ using System;
 using MKTFY.App;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MKTFY.App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210208182257_AdjustTransaction")]
+    partial class AdjustTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,36 +244,6 @@ namespace MKTFY.App.Migrations
                     b.ToTable("ListingStatuses");
                 });
 
-            modelBuilder.Entity("MKTFY.Models.Entities.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("BuyerId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid>("ListingId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
-
-                    b.HasIndex("ListingId");
-
-                    b.HasIndex("OrderStatusId");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("MKTFY.Models.Entities.Province", b =>
                 {
                     b.Property<int>("Id")
@@ -297,6 +269,42 @@ namespace MKTFY.App.Migrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("Provinces");
+                });
+
+            modelBuilder.Entity("MKTFY.Models.Entities.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("BuyerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ListingId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ListingId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("OrderStatusId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BuyerId");
+
+                    b.HasIndex("ListingId1");
+
+                    b.HasIndex("OrderStatusId");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("MKTFY.Models.Entities.User", b =>
@@ -565,32 +573,30 @@ namespace MKTFY.App.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MKTFY.Models.Entities.Order", b =>
-                {
-                    b.HasOne("MKTFY.Models.Entities.User", "Buyer")
-                        .WithMany("Orders")
-                        .HasForeignKey("BuyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKTFY.Models.Entities.Listing", "Listing")
-                        .WithMany("Orders")
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MKTFY.Models.Entities.ListingStatus", "OrderStatus")
-                        .WithMany("Orders")
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MKTFY.Models.Entities.Province", b =>
                 {
                     b.HasOne("MKTFY.Models.Entities.Country", "Country")
                         .WithMany("Provinces")
                         .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MKTFY.Models.Entities.Transaction", b =>
+                {
+                    b.HasOne("MKTFY.Models.Entities.User", "Buyer")
+                        .WithMany("Transactions")
+                        .HasForeignKey("BuyerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MKTFY.Models.Entities.Listing", "Listing")
+                        .WithMany("Transactions")
+                        .HasForeignKey("ListingId1");
+
+                    b.HasOne("MKTFY.Models.Entities.ListingStatus", "OrderStatus")
+                        .WithMany("Transactions")
+                        .HasForeignKey("OrderStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

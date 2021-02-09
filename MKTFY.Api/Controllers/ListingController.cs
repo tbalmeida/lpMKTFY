@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.ViewModels;
 using System;
@@ -73,6 +74,17 @@ namespace MKTFY.Api.Controllers
         public async Task<ActionResult<string>> Delete([FromRoute] Guid id)
         {
             var result = await _listingRepository.Delete(id);
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/buy")]
+        public async Task<ActionResult<OrderVM>> Buy([FromRoute] Guid id, [FromBody] OrderCreateVM src)
+        {
+            if (id != src.ListingId)
+                throw new MismatchingId(id.ToString());
+
+            var result = await _listingRepository.Buy(src);
+
             return Ok(result);
         }
     }

@@ -17,14 +17,16 @@ namespace MKTFY.App.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly IListingStatusRepository _listingStatusRepository;
 
         // Error message
         private readonly string _notFoundMsg = "Listing not found, please check the Id provided";
 
-        public ListingRepository(ApplicationDbContext dbContext, IUserRepository userRepository)
+        public ListingRepository(ApplicationDbContext dbContext, IUserRepository userRepository, IListingStatusRepository listingStatusRepository)
         {
             _context = dbContext;
             _userRepository = userRepository;
+            _listingStatusRepository = listingStatusRepository;
         }
 
         public async Task<ListingVM> Create(ListingCreateVM src)
@@ -222,6 +224,44 @@ namespace MKTFY.App.Repositories
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
             return results;
+        }
+
+        public async Task<OrderVM> Buy(OrderCreateVM src)
+        {
+            int thisStatus = await GetStatus(src.ListingId);
+            int statusActive = await ValidateState("Active");
+
+            if (thisStatus != statusActive)
+                throw new Exception("This listing is not for sale.");
+
+            src.OrderStatusId = await ValidateState("Pending");
+            var thisOrder = new Order(src);
+            await _context.Orders.AddAsync(thisOrder);
+            await _context.SaveChangesAsync();
+
+            return new OrderVM(thisOrder);
+        }
+
+        // look for a Listing Status based on the name
+        private async Task<int> ValidateState(string name)
+        {
+            int returnStatus = await _listingStatusRepository.GetByName(name);
+
+            if (returnStatus <= 0)
+                throw new Exception("Could not find the requested status: " + name);
+
+            return returnStatus;
+        }
+
+        // retrieves only the Status of a listing
+        private async Task<int> GetStatus(Guid id)
+        {
+            var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
+
+            if (result == null)
+                throw new NotFoundException(_notFoundMsg, id.ToString());
+
+            return result.ListingStatusId;
         }
     }
 }

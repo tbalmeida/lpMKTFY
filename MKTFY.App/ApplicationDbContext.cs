@@ -30,8 +30,8 @@ namespace MKTFY.App
 
         public DbSet<ListingImage> ListingImages { get; set; }
 
-        public DbSet<Transaction> Transactions { get; set; }
-
         public DbSet<ItemCondition> ItemConditions { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
     }
 }

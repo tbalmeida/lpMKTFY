@@ -18,7 +18,6 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<string> Delete(Guid id);
 
-        //Task<List<Listing>> FilterListings ([Optional] bool activeOnly, [Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId);
         Task<List<Listing>> FilterListings(int cityId = 0, string searchText = null, int categoryId = 0, int itemConditionId = 0, int listingStatusId = 0, bool activeOnly = true, string ownerId = null);
 
         Task<List<ListingVM>> GetListings([Optional] int cityId, [Optional] string searchText, [Optional] int categoryId, [Optional] int itemConditionId, [Optional] int listingStatusId, [Optional] bool activeOnly, [Optional] string ownerId);
@@ -28,5 +27,7 @@ namespace MKTFY.App.Repositories.Interfaces
         Task<ListingVM> UpdatePrice(Guid id, ListingUpdatePriceVM src);
 
         Task<ListingVM> UpdateStatus(Guid id, ListingUpdateStatusVM src);
+
+        Task<OrderVM> Buy(OrderCreateVM src);
     }
 }
