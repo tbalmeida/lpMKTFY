@@ -64,9 +64,9 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpPatch("{id}/status")]
-        public async Task<ActionResult<ListingVM>> UpdateStatus(Guid id, ListingUpdateStatusVM src)
+        public async Task<ActionResult<ListingVM>> UpdateStatus(Guid id, int statusId)
         {
-            var result = await _listingRepository.UpdateStatus(id, src);
+            bool result = await _listingRepository.UpdateStatus(id, statusId);
             return Ok(result);
         }
 

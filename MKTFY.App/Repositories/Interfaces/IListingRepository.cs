@@ -26,7 +26,7 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<ListingVM> UpdatePrice(Guid id, ListingUpdatePriceVM src);
 
-        Task<ListingVM> UpdateStatus(Guid id, ListingUpdateStatusVM src);
+        Task<bool> UpdateStatus(Guid id, int newStatusId);
 
         Task<OrderVM> Buy(OrderCreateVM src);
     }

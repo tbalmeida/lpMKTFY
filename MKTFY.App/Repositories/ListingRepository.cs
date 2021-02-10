@@ -162,17 +162,20 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<ListingVM> UpdateStatus(Guid id, ListingUpdateStatusVM src)
+        public async Task<bool> UpdateStatus(Guid id, int newStatusId)
         {
+            try
+            {
+                var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
 
-            var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
-            if (result == null)
-                throw new NotFoundException(_notFoundMsg, id.ToString());
-
-            result.ListingStatusId = src.ListingStatusId;
-            await _context.SaveChangesAsync();
-
-            return new ListingVM(result);
+                result.ListingStatusId = newStatusId;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         // public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId, bool activeOnly = true)
@@ -234,12 +237,37 @@ namespace MKTFY.App.Repositories
             if (thisStatus != statusActive)
                 throw new Exception("This listing is not for sale.");
 
-            src.OrderStatusId = await ValidateState("Pending");
-            var thisOrder = new Order(src);
-            await _context.Orders.AddAsync(thisOrder);
-            await _context.SaveChangesAsync();
+            var dbTrans = _context.Database.BeginTransaction();
 
-            return new OrderVM(thisOrder);
+            try
+            {
+                int statusPending = await _listingStatusRepository.GetByName("Pending");
+
+                // Create an order and set it to Pending
+                src.OrderStatusId = await ValidateState("Pending");
+
+                var thisOrder = new Order(src);
+                await _context.Orders.AddAsync(thisOrder);
+                await _context.SaveChangesAsync();
+
+                // updates the listing status to pending
+                bool listingOk = await UpdateStatus(src.ListingId, statusPending);
+
+                if (!listingOk)
+                {
+                    await dbTrans.RollbackAsync();
+                    throw new Exception("Could not create an order for this listing. Please, try again later.");
+                }
+                // commit all changes to database and return an Order view
+                await dbTrans.CommitAsync();
+
+                return new OrderVM(thisOrder);
+            }
+            catch (Exception ex)
+            {
+                await dbTrans.RollbackAsync();
+                throw new Exception("Could not create an order for this listing. Please, check: " + ex.Message);
+            }
         }
 
         // look for a Listing Status based on the name
