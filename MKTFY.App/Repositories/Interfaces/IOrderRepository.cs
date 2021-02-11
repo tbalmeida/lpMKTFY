@@ -1,4 +1,5 @@
-﻿using MKTFY.Models.ViewModels;
+﻿using MKTFY.Models.Entities;
+using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,10 +9,12 @@ namespace MKTFY.App.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<OrderVM> Create(OrderCreateVM src);
+        Task<Order> Create(OrderCreateVM src);
 
-        Task<OrderVM> GetByUser(string userId);
+        Task<List<OrderVM>> GetByUser(string userId);
 
         Task<OrderVM> GetById(Guid id);
+
+        Task<bool> Update(OrderUpdateVM src);
     }
 }

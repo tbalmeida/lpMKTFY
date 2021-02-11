@@ -18,15 +18,20 @@ namespace MKTFY.App.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
         private readonly IListingStatusRepository _listingStatusRepository;
+        private readonly IOrderRepository _orderRepository;
 
         // Error message
         private readonly string _notFoundMsg = "Listing not found, please check the Id provided";
 
-        public ListingRepository(ApplicationDbContext dbContext, IUserRepository userRepository, IListingStatusRepository listingStatusRepository)
+        public ListingRepository(ApplicationDbContext dbContext, 
+            IUserRepository userRepository, 
+            IListingStatusRepository listingStatusRepository,
+            IOrderRepository orderRepository)
         {
             _context = dbContext;
             _userRepository = userRepository;
             _listingStatusRepository = listingStatusRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<ListingVM> Create(ListingCreateVM src)
@@ -178,7 +183,6 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        // public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId, bool activeOnly = true)
         public async Task<List<Listing>> FilterListings(int cityId = 0, string searchText = null, int categoryId = 0, int itemConditionId = 0, int listingStatusId = 0, bool activeOnly = true, string ownerId = null)
         {
 
@@ -246,9 +250,8 @@ namespace MKTFY.App.Repositories
                 // Create an order and set it to Pending
                 src.OrderStatusId = await ValidateState("Pending");
 
-                var thisOrder = new Order(src);
-                await _context.Orders.AddAsync(thisOrder);
-                await _context.SaveChangesAsync();
+
+                var thisOrder = await _orderRepository.Create(src);
 
                 // updates the listing status to pending
                 bool listingOk = await UpdateStatus(src.ListingId, statusPending);

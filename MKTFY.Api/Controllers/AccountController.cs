@@ -22,16 +22,22 @@ namespace MKTFY.Api.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
-
         private readonly IListingRepository _listingRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public AccountController(SignInManager<User> signInManager, IConfiguration configuration, IUserRepository userRepository, UserManager<User> userManager, IListingRepository listingRepository)
+        public AccountController(SignInManager<User> signInManager, 
+            IConfiguration configuration, 
+            IUserRepository userRepository, 
+            UserManager<User> userManager, 
+            IListingRepository listingRepository,
+            IOrderRepository orderRepository)
         {
             _signInManager = signInManager;
             _configuration = configuration;
             _userRepository = userRepository;
             _userManager = userManager;
             _listingRepository = listingRepository;
+            _orderRepository = orderRepository;
         }
 
         [HttpPost("login")]
@@ -158,6 +164,29 @@ namespace MKTFY.Api.Controllers
             var result = await _userRepository.UpdateUser(src);
 
             return Ok(result);
+        }
+
+        [HttpGet("{id}/purchases/{orderId}")]
+        public async Task<ActionResult<OrderVM>> GetOrderById([FromRoute] string id, Guid orderId)
+        {
+            var order = await _orderRepository.GetById(orderId);  //_userRepository.GetOrderById(orderId);
+
+            // not found
+            if (order == null)
+                return NotFound("The order " + orderId.ToString() + " was not found");
+
+            // the UserId provided doesn't match buyer nor seller
+            if (order.BuyerId != id && order.SellerId != id)
+                return Unauthorized("You do not have access to this Order.");
+
+            //return Ok(order);
+            return Ok(order);
+        }
+
+        [HttpPatch("{id}/purchases/{orderId}")]
+        public async Task<ActionResult<bool>> UpdateOrder([FromRoute] string id, Guid orderId, [FromBody] OrderUpdateVM src)
+        {
+            return Ok("Not implemented yet");
         }
     }
 }

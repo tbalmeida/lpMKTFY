@@ -8,6 +8,7 @@ using MKTFY.App.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using MKTFY.Models.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace MKTFY.App.Repositories
 {
@@ -15,11 +16,13 @@ namespace MKTFY.App.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<User> _signInManager;
+        private readonly IOrderRepository _orderRepository;
 
-        public UserRepository(SignInManager<User> signInManager, ApplicationDbContext dbContext)
+        public UserRepository(SignInManager<User> signInManager, ApplicationDbContext dbContext, IOrderRepository orderRepository)
         {
             _context = dbContext;
             _signInManager = signInManager;
+            _orderRepository = orderRepository;
         }
 
         public async Task<UserVM> GetUserByEmail(string email)
@@ -97,6 +100,18 @@ namespace MKTFY.App.Repositories
                 return false;
 
             return true;
+        }
+
+        public async Task<OrderVM> GetOrderById(Guid id)
+        {
+            var result = await _orderRepository.GetById(id);
+            return result;
+            //throw new Exception("Not ready");
+            }
+
+        public Task<List<OrderVM>> GetOrders(string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

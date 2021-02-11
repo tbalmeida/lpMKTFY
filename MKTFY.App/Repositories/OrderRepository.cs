@@ -1,4 +1,6 @@
-﻿using MKTFY.App.Repositories.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MKTFY.App.Exceptions;
+using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
 using System;
@@ -12,28 +14,40 @@ namespace MKTFY.App.Repositories
     {
         private readonly ApplicationDbContext _context;
 
-        // Error message
-
         public OrderRepository(ApplicationDbContext dbContext)
         {
             _context = dbContext;
         }
 
-        public async Task<OrderVM> Create(OrderCreateVM src)
+        public async Task<Order> Create(OrderCreateVM src)
         {
             var entity = new Order(src);
             await _context.Orders.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return new OrderVM(entity);
+            return entity;
         }
 
-        public Task<OrderVM> GetById(Guid id)
+        public async Task<OrderVM> GetById(Guid id)
+        {
+            var result = await _context.Orders
+                .Include(order => order.Listing)
+                .Include(order => order.Listing.Category)
+                .Include(order => order.Listing.ItemCondition)
+                .Include(order => order.Listing.User)
+                .FirstOrDefaultAsync(order => order.Id == id);
+            if (result == null)
+                throw new NotFoundException("Order not found", id.ToString());
+
+            return new OrderVM(result);
+        }
+
+        public Task<List<OrderVM>> GetByUser(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<OrderVM> GetByUser(string userId)
+        public Task<bool> Update(OrderUpdateVM src)
         {
             throw new NotImplementedException();
         }
