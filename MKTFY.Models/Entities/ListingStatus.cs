@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MKTFY.Models.Entities
 {
@@ -13,7 +14,10 @@ namespace MKTFY.Models.Entities
 
         public bool IsActive { get; set; } = false;
 
+        // Navigational
         public ICollection<Listing> Listings { get; set; }
-        public ICollection<Transaction> Transactions { get; set; }
+        
+        [InverseProperty("OrderStatus")]
+        public ICollection<Order> Orders { get; set; }
     }
 }

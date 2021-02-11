@@ -1,4 +1,5 @@
 ﻿using MKTFY.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -19,6 +20,10 @@ namespace MKTFY.App.Repositories.Interfaces
         Task<UserVM> UpdateUser(UserUpdateVM src);
 
         Task<bool> IsValid(string email, string password);
+
+        Task<OrderVM> GetOrderById(Guid id);
+
+        Task<List<OrderVM>> GetOrders(string userId);
 
         // Logout
 

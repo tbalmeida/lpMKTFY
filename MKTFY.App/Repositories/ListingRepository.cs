@@ -17,14 +17,21 @@ namespace MKTFY.App.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly IListingStatusRepository _listingStatusRepository;
+        private readonly IOrderRepository _orderRepository;
 
         // Error message
         private readonly string _notFoundMsg = "Listing not found, please check the Id provided";
 
-        public ListingRepository(ApplicationDbContext dbContext, IUserRepository userRepository)
+        public ListingRepository(ApplicationDbContext dbContext, 
+            IUserRepository userRepository, 
+            IListingStatusRepository listingStatusRepository,
+            IOrderRepository orderRepository)
         {
             _context = dbContext;
             _userRepository = userRepository;
+            _listingStatusRepository = listingStatusRepository;
+            _orderRepository = orderRepository;
         }
 
         public async Task<ListingVM> Create(ListingCreateVM src)
@@ -160,20 +167,22 @@ namespace MKTFY.App.Repositories
             return new ListingVM(result);
         }
 
-        public async Task<ListingVM> UpdateStatus(Guid id, ListingUpdateStatusVM src)
+        public async Task<bool> UpdateStatus(Guid id, int newStatusId)
         {
+            try
+            {
+                var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
 
-            var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
-            if (result == null)
-                throw new NotFoundException(_notFoundMsg, id.ToString());
-
-            result.ListingStatusId = src.ListingStatusId;
-            await _context.SaveChangesAsync();
-
-            return new ListingVM(result);
+                result.ListingStatusId = newStatusId;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        // public async Task<List<Listing>> FilterListings([Optional] int? cityId, [Optional] string? searchText, [Optional] int? categoryId, [Optional] int? itemConditionId, [Optional] int? listingStatusId, [Optional] string? ownerId, bool activeOnly = true)
         public async Task<List<Listing>> FilterListings(int cityId = 0, string searchText = null, int categoryId = 0, int itemConditionId = 0, int listingStatusId = 0, bool activeOnly = true, string ownerId = null)
         {
 
@@ -222,6 +231,68 @@ namespace MKTFY.App.Repositories
 
             var results = await query.OrderBy(lst => lst.Created).ToListAsync();
             return results;
+        }
+
+        public async Task<OrderVM> Buy(OrderCreateVM src)
+        {
+            int thisStatus = await GetStatus(src.ListingId);
+            int statusActive = await ValidateState("Active");
+
+            if (thisStatus != statusActive)
+                throw new Exception("This listing is not for sale.");
+
+            var dbTrans = _context.Database.BeginTransaction();
+
+            try
+            {
+                int statusPending = await _listingStatusRepository.GetByName("Pending");
+
+                // Create an order and set it to Pending
+                src.OrderStatusId = await ValidateState("Pending");
+
+
+                var thisOrder = await _orderRepository.Create(src);
+
+                // updates the listing status to pending
+                bool listingOk = await UpdateStatus(src.ListingId, statusPending);
+
+                if (!listingOk)
+                {
+                    await dbTrans.RollbackAsync();
+                    throw new Exception("Could not create an order for this listing. Please, try again later.");
+                }
+                // commit all changes to database and return an Order view
+                await dbTrans.CommitAsync();
+
+                return new OrderVM(thisOrder);
+            }
+            catch (Exception ex)
+            {
+                await dbTrans.RollbackAsync();
+                throw new Exception("Could not create an order for this listing. Please, check: " + ex.Message);
+            }
+        }
+
+        // look for a Listing Status based on the name
+        private async Task<int> ValidateState(string name)
+        {
+            int returnStatus = await _listingStatusRepository.GetByName(name);
+
+            if (returnStatus <= 0)
+                throw new Exception("Could not find the requested status: " + name);
+
+            return returnStatus;
+        }
+
+        // retrieves only the Status of a listing
+        private async Task<int> GetStatus(Guid id)
+        {
+            var result = await _context.Listings.FirstOrDefaultAsync(lst => lst.Id == id);
+
+            if (result == null)
+                throw new NotFoundException(_notFoundMsg, id.ToString());
+
+            return result.ListingStatusId;
         }
     }
 }

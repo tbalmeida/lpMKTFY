@@ -8,6 +8,12 @@ namespace MKTFY.App.Repositories.Interfaces
     {
         Task<List<ListingStatusVM>> GetAll();
 
+<<<<<<< HEAD
         Task<int> GetStatusId(string name);
+=======
+        Task<int> GetByName(string name);
+
+        Task<bool> IsActive(int id);
+>>>>>>> ft/transactions
     }
 }

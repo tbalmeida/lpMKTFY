@@ -22,16 +22,22 @@ namespace MKTFY.Api.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
-
         private readonly IListingRepository _listingRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public AccountController(SignInManager<User> signInManager, IConfiguration configuration, IUserRepository userRepository, UserManager<User> userManager, IListingRepository listingRepository)
+        public AccountController(SignInManager<User> signInManager, 
+            IConfiguration configuration, 
+            IUserRepository userRepository, 
+            UserManager<User> userManager, 
+            IListingRepository listingRepository,
+            IOrderRepository orderRepository)
         {
             _signInManager = signInManager;
             _configuration = configuration;
             _userRepository = userRepository;
             _userManager = userManager;
             _listingRepository = listingRepository;
+            _orderRepository = orderRepository;
         }
 
         [HttpPost("login")]
@@ -156,6 +162,41 @@ namespace MKTFY.Api.Controllers
                 return StatusCode(401);
 
             var result = await _userRepository.UpdateUser(src);
+
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/purchases")]
+        public async Task<ActionResult<List<OrderVM>>> Purchases([FromRoute] string id)
+        {
+            var results = await _orderRepository.GetByUser(id);
+            return Ok(results);
+        }
+
+        [HttpGet("{id}/purchases/{orderId}")]
+        public async Task<ActionResult<OrderVM>> GetOrderById([FromRoute] string id, Guid orderId)
+        {
+            var order = await _orderRepository.GetById(orderId);  //_userRepository.GetOrderById(orderId);
+
+            // not found
+            if (order == null)
+                return NotFound("The order " + orderId.ToString() + " was not found");
+
+            // the UserId provided doesn't match buyer nor seller
+            if (order.BuyerId != id && order.SellerId != id)
+                return Unauthorized("You do not have access to this Order.");
+
+            //return Ok(order);
+            return Ok(order);
+        }
+
+        [HttpPatch("{id}/purchases/{orderId}")]
+        public async Task<ActionResult<OrderVM>> UpdateOrder([FromRoute] string id, Guid orderId, [FromBody] OrderUpdateVM src)
+        {
+            if (orderId != src.Id)
+                throw new MismatchingId(orderId.ToString());
+
+            var result = await _orderRepository.Update(src);
 
             return Ok(result);
         }

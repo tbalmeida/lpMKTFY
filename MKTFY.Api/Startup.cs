@@ -31,7 +31,9 @@ namespace MKTFY.api
             
             // Set up the database
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"),
+                options.UseNpgsql(
+                     Configuration.GetConnectionString("DefaultConnection"),   
+                    // "Host=localhost;Port=26000;Database=devdb;User Id=devdbuser;Password=devdbpassword",
                 b =>
                 {
                     b.MigrationsAssembly("MKTFY.App");
@@ -72,6 +74,7 @@ namespace MKTFY.api
             services.AddScoped<IItemConditionRepository, ItemConditionRepository>();
             services.AddScoped<IListingStatusRepository, ListingStatusRepository>();
             services.AddScoped<IContactUsRepository, ContactUsRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

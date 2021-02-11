@@ -74,6 +74,6 @@ namespace MKTFY.Models.Entities
 
         public ICollection<ListingImage> ListingImages { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

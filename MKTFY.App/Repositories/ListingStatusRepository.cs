@@ -36,14 +36,18 @@ namespace MKTFY.App.Repositories
             }
         }
 
-        public async Task<int> GetStatusId(string name)
+        // Returns the Id for a Status, searching by name. If not found, return -1 and treat the erro on the caller
+        public async Task<int> GetByName(string name)
         {
-            var result = await _context.ListingStatuses.FirstOrDefaultAsync(item => item.Name == name);
+            var result = await _context.ListingStatuses.FirstOrDefaultAsync(i => i.Name == name);
+            return result == null ? -1 : result.Id;                
+        }
 
-            if (result == null)
-                return -1;
-
-            return result.Id;
+        // Checks if a Status is active (by default, the Active or Pending are active); if not found, returns False 
+        public async Task<bool> IsActive(int id)
+        {
+            var result = await _context.ListingStatuses.FindAsync(id);
+            return result != null && result.IsActive;
         }
     }
 }

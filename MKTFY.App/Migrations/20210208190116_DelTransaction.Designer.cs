@@ -3,15 +3,17 @@ using System;
 using MKTFY.App;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MKTFY.App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210208190116_DelTransaction")]
+    partial class DelTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,9 +255,14 @@ namespace MKTFY.App.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("ListingId")
+                    b.Property<int>("ListingId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ListingId1")
                         .HasColumnType("uuid");
 
                     b.Property<int>("OrderStatusId")
@@ -265,7 +272,7 @@ namespace MKTFY.App.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.HasIndex("ListingId");
+                    b.HasIndex("ListingId1");
 
                     b.HasIndex("OrderStatusId");
 
@@ -575,9 +582,7 @@ namespace MKTFY.App.Migrations
 
                     b.HasOne("MKTFY.Models.Entities.Listing", "Listing")
                         .WithMany("Orders")
-                        .HasForeignKey("ListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ListingId1");
 
                     b.HasOne("MKTFY.Models.Entities.ListingStatus", "OrderStatus")
                         .WithMany("Orders")

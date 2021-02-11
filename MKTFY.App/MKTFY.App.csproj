@@ -17,6 +17,16 @@
     <Compile Remove="Migrations\20201214234539_AddEntities.Designer.cs" />
     <Compile Remove="Migrations\20201220164758_DelListingTimestamp.cs" />
     <Compile Remove="Migrations\20201220164758_DelListingTimestamp.Designer.cs" />
+    <Compile Remove="Migrations\20210208153733_AdjustTransaction.cs" />
+    <Compile Remove="Migrations\20210208153733_AdjustTransaction.Designer.cs" />
+    <Compile Remove="Migrations\20210208182740_AdjustTransactionId.cs" />
+    <Compile Remove="Migrations\20210208182740_AdjustTransactionId.Designer.cs" />
+    <Compile Remove="Migrations\20210208185204_AddOrder.cs" />
+    <Compile Remove="Migrations\20210208185204_AddOrder.Designer.cs" />
+    <Compile Remove="Migrations\20210209174848_FixOrderListingId.cs" />
+    <Compile Remove="Migrations\20210209174848_FixOrderListingId.Designer.cs" />
+    <Compile Remove="Migrations\20210209175617_FixDelOrderListingId.cs" />
+    <Compile Remove="Migrations\20210209175617_FixDelOrderListingId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
