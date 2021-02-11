@@ -5,6 +5,8 @@ using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,14 +44,37 @@ namespace MKTFY.App.Repositories
             return new OrderVM(result);
         }
 
-        public Task<List<OrderVM>> GetByUser(string userId)
+        public async Task<List<OrderVM>> GetByUser(string userId, [Optional] bool? active)
         {
-            throw new NotImplementedException();
+            var query = _context.Orders
+                .Include(order => order.Listing)
+                .Include(order => order.Listing.Category)
+                .Include(order => order.Listing.ItemCondition)
+                .Include(order => order.Listing.User)
+                .AsQueryable();
+
+            if (active != null)
+                query = query.Where(order => order.Listing.ListingStatus.IsActive == active);
+
+            query = query.Where(order => order.BuyerId == userId);
+
+            var results = await query.OrderBy(lst => lst.Created).ToListAsync();
+
+            return results.ConvertAll(order => new OrderVM(order));
         }
 
-        public Task<bool> Update(OrderUpdateVM src)
+        public async Task<OrderVM> Update(OrderUpdateVM src)
         {
-            throw new NotImplementedException();
+            var current = await _context.Orders.FindAsync(src.Id);
+            if (current == null)
+                throw new NotFoundException("The order could not be found", src.Id.ToString());
+
+            current.OrderStatusId = src.OrderStatusId;
+            current.BuyerId = src.BuyerId;
+
+            await _context.SaveChangesAsync();
+
+            return new OrderVM(current);
         }
     }
 }

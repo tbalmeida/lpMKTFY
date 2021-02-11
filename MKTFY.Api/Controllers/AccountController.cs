@@ -166,6 +166,13 @@ namespace MKTFY.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/purchases")]
+        public async Task<ActionResult<List<OrderVM>>> Purchases([FromRoute] string id)
+        {
+            var results = await _orderRepository.GetByUser(id);
+            return Ok(results);
+        }
+
         [HttpGet("{id}/purchases/{orderId}")]
         public async Task<ActionResult<OrderVM>> GetOrderById([FromRoute] string id, Guid orderId)
         {
@@ -184,9 +191,14 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpPatch("{id}/purchases/{orderId}")]
-        public async Task<ActionResult<bool>> UpdateOrder([FromRoute] string id, Guid orderId, [FromBody] OrderUpdateVM src)
+        public async Task<ActionResult<OrderVM>> UpdateOrder([FromRoute] string id, Guid orderId, [FromBody] OrderUpdateVM src)
         {
-            return Ok("Not implemented yet");
+            if (orderId != src.Id)
+                throw new MismatchingId(orderId.ToString());
+
+            var result = await _orderRepository.Update(src);
+
+            return Ok(result);
         }
     }
 }
