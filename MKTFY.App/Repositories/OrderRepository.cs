@@ -37,6 +37,7 @@ namespace MKTFY.App.Repositories
                 .Include(order => order.Listing.Category)
                 .Include(order => order.Listing.ItemCondition)
                 .Include(order => order.Listing.User)
+                .Include(order => order.OrderStatus)
                 .FirstOrDefaultAsync(order => order.Id == id);
             if (result == null)
                 throw new NotFoundException("Order not found", id.ToString());
@@ -51,6 +52,7 @@ namespace MKTFY.App.Repositories
                 .Include(order => order.Listing.Category)
                 .Include(order => order.Listing.ItemCondition)
                 .Include(order => order.Listing.User)
+                .Include(order => order.OrderStatus)
                 .AsQueryable();
 
             if (active != null)
