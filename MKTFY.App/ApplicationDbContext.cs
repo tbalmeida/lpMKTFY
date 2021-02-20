@@ -33,5 +33,7 @@ namespace MKTFY.App
         public DbSet<ItemCondition> ItemConditions { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Fee> Fees { get; set; }
     }
 }

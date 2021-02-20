@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
@@ -7,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MKTFY.App.Repositories
@@ -15,10 +15,12 @@ namespace MKTFY.App.Repositories
     public class OrderRepository : IOrderRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _config;
 
-        public OrderRepository(ApplicationDbContext dbContext)
+        public OrderRepository(ApplicationDbContext dbContext, IConfiguration config)
         {
             _context = dbContext;
+            _config = config;
         }
 
         public async Task<Order> Create(OrderCreateVM src)
@@ -26,6 +28,9 @@ namespace MKTFY.App.Repositories
             var entity = new Order(src);
             await _context.Orders.AddAsync(entity);
             await _context.SaveChangesAsync();
+
+            var apiKey = _config.GetSection("SGSettings").GetValue<string>("SendGrid");
+
 
             return entity;
         }
