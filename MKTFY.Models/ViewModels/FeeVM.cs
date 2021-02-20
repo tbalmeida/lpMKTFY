@@ -1,12 +1,12 @@
-﻿using MKTFY.Models.ViewModels;
-using System.ComponentModel.DataAnnotations;
+﻿using MKTFY.Models.Entities;
 
-namespace MKTFY.Models.Entities
+namespace MKTFY.Models.ViewModels
 {
-    public class Fee
+    public class FeeVM
     {
-        public Fee(FeeCreateVM src)
+        public FeeVM(Fee src)
         {
+            Id = src.Id;
             Title = src.Title;
             Value = src.Value;
             IsPercentual = src.IsPercentual;
@@ -14,22 +14,16 @@ namespace MKTFY.Models.Entities
             Notes = src.Notes;
         }
 
-        [Key]
         public int Id { get; set; }
 
-        [Required, MinLength(3), MaxLength(20)]
         public string Title { get; set; }
 
-        [Required]
         public decimal Value { get; set; }
 
-        [Required]
         public bool IsPercentual { get; set; }
 
-        [Required]
         public bool IsActive { get; set; }
 
-        [MaxLength(100)]
         public string? Notes { get; set; }
     }
 }
