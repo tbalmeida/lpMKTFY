@@ -5,6 +5,8 @@ namespace MKTFY.Models.Entities
 {
     public class Fee
     {
+        public Fee() { }
+
         public Fee(FeeCreateVM src)
         {
             Title = src.Title;

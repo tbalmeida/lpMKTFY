@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MKTFY.App.Exceptions;
 using MKTFY.App.Repositories.Interfaces;
 using MKTFY.Models.Entities;
 using MKTFY.Models.ViewModels;
@@ -43,9 +44,14 @@ namespace MKTFY.App.Repositories
             return results.ConvertAll(item => new FeeVM(item));
         }
 
-        public Task<FeeVM> GetById(int id)
+        public async Task<FeeVM> GetById(int id)
         {
-            throw new NotImplementedException();
+            var results = await _context.Fees.FindAsync(id);
+
+            if (results == null)
+                throw new NotFoundException(_notFoundMsg, id.ToString());
+
+            return new FeeVM(results);
         }
 
         public Task<FeeVM> Update(FeeUpdateVM src)
