@@ -46,22 +46,44 @@ namespace MKTFY.App.Repositories
 
         public async Task<FeeVM> GetById(int id)
         {
-            var results = await _context.Fees.FindAsync(id);
-
-            if (results == null)
-                throw new NotFoundException(_notFoundMsg, id.ToString());
+            var results = await GetFee(id);
 
             return new FeeVM(results);
         }
 
-        public Task<FeeVM> Update(FeeUpdateVM src)
+        public async Task<FeeVM> Update(FeeUpdateVM src)
         {
-            throw new NotImplementedException();
+            var results = await GetFee(src.Id);
+
+            results.Title = src.Title;
+            results.Value = src.Value;
+            results.Notes = src.Notes;
+            results.IsActive = src.IsActive;
+            results.IsPercentual = src.IsPercentual;
+
+            await _context.SaveChangesAsync();
+
+            return new FeeVM(results);
         }
 
-        public Task<string> Delete(int id)
+        public async Task<string> Delete(int id)
         {
-            throw new NotImplementedException();
+            var result = await GetFee(id);
+
+            _context.Fees.Remove(result);
+            await _context.SaveChangesAsync();
+
+            return "Fee deleted.";
+        }
+
+        private async Task<Fee> GetFee(int id)
+        {
+            var entity = await _context.Fees.FindAsync(id);
+
+            if (entity == null)
+                throw new NotFoundException(_notFoundMsg, id.ToString());
+
+            return entity;
         }
     }
 }

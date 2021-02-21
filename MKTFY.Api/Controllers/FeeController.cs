@@ -28,11 +28,27 @@ namespace MKTFY.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<FeeVM>>> GetAll(bool onlyActive)
+        public async Task<ActionResult<List<FeeVM>>> GetAll([FromQuery] bool onlyActive)
         {
             var result = await _feeRepository.GetAll(onlyActive);
 
             return Ok(result);
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<FeeVM>> Update(FeeUpdateVM src)
+        {
+            var results = await _feeRepository.Update(src);
+
+            return Ok(results);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<string>> Delete([FromRoute] int id)
+        {
+            var results = await _feeRepository.Delete(id);
+
+            return Ok(results);
         }
     }
 }
