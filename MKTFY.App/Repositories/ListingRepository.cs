@@ -250,7 +250,6 @@ namespace MKTFY.App.Repositories
                 // Create an order and set it to Pending
                 src.OrderStatusId = await ValidateState("Pending");
 
-
                 var thisOrder = await _orderRepository.Create(src);
 
                 // updates the listing status to pending

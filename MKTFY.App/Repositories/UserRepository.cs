@@ -7,8 +7,6 @@ using System.Runtime.InteropServices;
 using MKTFY.App.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using MKTFY.Models.Entities;
-using System;
-using System.Collections.Generic;
 
 namespace MKTFY.App.Repositories
 {
@@ -100,18 +98,6 @@ namespace MKTFY.App.Repositories
                 return false;
 
             return true;
-        }
-
-        public async Task<OrderVM> GetOrderById(Guid id)
-        {
-            var result = await _orderRepository.GetById(id);
-            return result;
-            //throw new Exception("Not ready");
-            }
-
-        public Task<List<OrderVM>> GetOrders(string userId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

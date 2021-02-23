@@ -23,7 +23,7 @@ namespace MKTFY.Models.ViewModels
             }
             Category = src.Listing.Category?.Title;
             Seller = src.Listing.User?.FirstName + " " + src.Listing.User?.LastName;
-            TotalPaid = src.TotalPaid;
+            TotalPaid = src.TotalPaid == 0 ? src.Listing.Price : src.TotalPaid;
         }
 
         public Guid Id { get; set; }

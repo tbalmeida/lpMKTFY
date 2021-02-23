@@ -21,10 +21,6 @@ namespace MKTFY.App.Repositories.Interfaces
 
         Task<bool> IsValid(string email, string password);
 
-        Task<OrderVM> GetOrderById(Guid id);
-
-        Task<List<OrderVM>> GetOrders(string userId);
-
         // Logout
 
         // Change password
