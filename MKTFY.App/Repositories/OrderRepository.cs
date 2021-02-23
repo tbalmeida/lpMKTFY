@@ -25,12 +25,13 @@ namespace MKTFY.App.Repositories
 
         public async Task<Order> Create(OrderCreateVM src)
         {
+            //var totalPaid = TotalPrice(src.)
+
             var entity = new Order(src);
             await _context.Orders.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            var apiKey = _config.GetSection("SGSettings").GetValue<string>("SendGrid");
-
+            //var apiKey = _config.GetSection("SGSettings").GetValue<string>("SendGrid");
 
             return entity;
         }

@@ -250,6 +250,9 @@ namespace MKTFY.App.Repositories
                 // Create an order and set it to Pending
                 src.OrderStatusId = await ValidateState("Pending");
 
+                decimal thisPrice = await GetPrice(src.ListingId);
+                src.TotalPaid = await TotalPrice(thisPrice);
+
                 var thisOrder = await _orderRepository.Create(src);
 
                 // updates the listing status to pending
@@ -292,6 +295,28 @@ namespace MKTFY.App.Repositories
                 throw new NotFoundException(_notFoundMsg, id.ToString());
 
             return result.ListingStatusId;
+        }
+
+        private async Task<decimal> GetPrice(Guid id)
+        {
+            var result = await _context.Listings.FindAsync(id);
+            if (result == null)
+                throw new NotFoundException(_notFoundMsg, id.ToString());
+
+            return result.Price;
+        }
+
+        private async Task<decimal> TotalPrice(decimal listingPrice)
+        {
+            var result = listingPrice;
+            var fees = await _context.Fees.Where(fee => fee.IsActive == true).ToListAsync();
+
+            fees.ForEach(item =>
+            {
+                result += item.IsPercentual ? listingPrice * (item.Value/100) : item.Value;
+            });
+
+            return Math.Round(result, 2);
         }
     }
 }
