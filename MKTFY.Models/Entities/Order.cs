@@ -31,6 +31,8 @@ namespace MKTFY.Models.Entities
         [Required]
         public int OrderStatusId { get; set; }
 
+        public decimal TotalPaid { get; set; }
+
         // Navigational
         public User Buyer { get; set; }
 

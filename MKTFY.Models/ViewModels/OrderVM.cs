@@ -23,6 +23,7 @@ namespace MKTFY.Models.ViewModels
             }
             Category = src.Listing.Category?.Title;
             Seller = src.Listing.User?.FirstName + " " + src.Listing.User?.LastName;
+            TotalPaid = src.TotalPaid;
         }
 
         public Guid Id { get; set; }
@@ -40,8 +41,10 @@ namespace MKTFY.Models.ViewModels
 
         public string BuyerId { get; set; }
 
+        // Order data
         public int OrderStatusId { get; set; }
         public string OrderStatus { get; set; }
+        public decimal TotalPaid { get; set; }
         public DateTime Created { get; set; }
     }
 }

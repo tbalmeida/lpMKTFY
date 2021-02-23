@@ -11,5 +11,7 @@ namespace MKTFY.Models.ViewModels
         public int OrderStatusId { get; set; }
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
+
+        public decimal TotalPaid { get; set; }
     }
 }

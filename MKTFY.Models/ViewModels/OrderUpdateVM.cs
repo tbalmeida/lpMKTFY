@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace MKTFY.Models.ViewModels
 {
@@ -18,6 +16,8 @@ namespace MKTFY.Models.ViewModels
         public string BuyerId { get; set; }
 
         public DateTime Created { get; set; }
+
+        public decimal TotalPaid { get; set; }
 
         [Required]
         public int OrderStatusId { get; set; }
