@@ -10,9 +10,9 @@ namespace MKTFY.Models.ViewModels
         {
             Id = src.Id;
             CategoryId = src.CategoryId;
-            CategoryTitle = src.Category == null ? null : src.Category.Title;
+            CategoryTitle = src.Category?.Title;
             ItemConditionId = src.ItemConditionId;
-            ItemConditionName = src.ItemCondition == null ? null : src.ItemCondition.Name;
+            ItemConditionName = src.ItemCondition?.Name;
             Title = src.Title;
             Description = src.Description;
             UserId = src.UserId;
@@ -21,7 +21,7 @@ namespace MKTFY.Models.ViewModels
             Location = src.Location;
             Price = src.Price;
             ListingStatusId = src.ListingStatusId;
-            StatusName = src.ListingStatus == null ? null : src.ListingStatus.Name;
+            StatusName = src.ListingStatus?.Name;
             IsActive = src.ListingStatus.IsActive;
             Created = src.Created;
             if (src.Updated != null)

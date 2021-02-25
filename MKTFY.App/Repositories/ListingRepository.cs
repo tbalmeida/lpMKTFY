@@ -306,14 +306,14 @@ namespace MKTFY.App.Repositories
             return result.Price;
         }
 
-        private async Task<decimal> TotalPrice(decimal listingPrice)
+        public async Task<decimal> TotalPrice(decimal itemPrice)
         {
-            var result = listingPrice;
+            var result = itemPrice;
             var fees = await _context.Fees.Where(fee => fee.IsActive == true).ToListAsync();
 
             fees.ForEach(item =>
             {
-                result += item.IsPercentual ? listingPrice * (item.Value/100) : item.Value;
+                result += item.IsPercentual ? itemPrice * (item.Value/100) : item.Value;
             });
 
             return Math.Round(result, 2);
