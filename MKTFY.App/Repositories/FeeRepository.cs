@@ -60,6 +60,7 @@ namespace MKTFY.App.Repositories
             results.Notes = src.Notes;
             results.IsActive = src.IsActive;
             results.IsPercentual = src.IsPercentual;
+            results.Cap = src.IsPercentual ? src.Cap : 0;
 
             await _context.SaveChangesAsync();
 

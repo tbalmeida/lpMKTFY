@@ -313,7 +313,12 @@ namespace MKTFY.App.Repositories
 
             fees.ForEach(item =>
             {
-                result += item.IsPercentual ? itemPrice * (item.Value/100) : item.Value;
+                if (item.IsPercentual)
+                {
+                    result += itemPrice * (item.Value / 100) > item.Cap ? (decimal)item.Cap : itemPrice * (item.Value / 100);
+                } else {
+                    result += item.Value;
+                }
             });
 
             return Math.Round(result, 2);

@@ -10,6 +10,7 @@ namespace MKTFY.Models.ViewModels
             Title = src.Title;
             Value = src.Value;
             IsPercentual = src.IsPercentual;
+            Cap = IsPercentual ? src.Cap : 0;
             IsActive = src.IsActive;
             Notes = src.Notes;
         }
@@ -21,6 +22,8 @@ namespace MKTFY.Models.ViewModels
         public decimal Value { get; set; }
 
         public bool IsPercentual { get; set; }
+
+        public decimal? Cap { get; set; }
 
         public bool IsActive { get; set; }
 

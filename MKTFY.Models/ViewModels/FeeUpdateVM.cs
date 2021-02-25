@@ -19,6 +19,8 @@ namespace MKTFY.Models.ViewModels
         [Required]
         public bool IsActive { get; set; } = true;
 
+        public decimal? Cap { get; set; }
+
         [MaxLength(100)]
         public string? Notes { get; set; }
     }
