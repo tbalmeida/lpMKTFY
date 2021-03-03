@@ -50,5 +50,15 @@ namespace MKTFY.Api.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("total")]
+        public async Task<ActionResult<decimal>> CalculateFee([FromBody] DecValueVM src)
+        {
+            if (src.Value <= 0)
+                return BadRequest("The price has to be greater than $ 0.00");
+            var result = await _feeRepository.GetCharges(src.Value);
+
+            return Ok(result);
+        }
     }
 }

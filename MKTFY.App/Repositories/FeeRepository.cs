@@ -86,5 +86,28 @@ namespace MKTFY.App.Repositories
 
             return entity;
         }
+
+        public async Task<decimal> GetCharges(decimal itemPrice)
+        {
+            if (itemPrice <= 0)
+                throw new Exception("A price can not be equal or less than $ 0.00");
+
+            var fees = await _context.Fees.Where(item => item.IsActive == true).ToListAsync();
+            if (fees == null)
+                return 0;
+
+            decimal result = 0;
+            fees.ForEach(fee => {
+                if (fee.IsPercentual)
+                {
+                    result += fee.Value / 100 * itemPrice > fee.Cap ? (decimal)fee.Cap : fee.Value / 100 * itemPrice;
+                } else {
+                    result += fee.Value;
+                }
+            });
+
+            return Math.Round(result, 2);
+
+        }
     }
 }

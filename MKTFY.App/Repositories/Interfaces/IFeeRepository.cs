@@ -15,5 +15,7 @@ namespace MKTFY.App.Repositories.Interfaces
         Task<FeeVM> GetById(int id);
 
         Task<string> Delete(int id);
+
+        Task<decimal> GetCharges(decimal itemPrice);
     }
 }
