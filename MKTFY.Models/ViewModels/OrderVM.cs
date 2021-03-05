@@ -18,12 +18,13 @@ namespace MKTFY.Models.ViewModels
             if (src.Listing != null)
             {
                 Title = src.Listing.Title;
-                Price = src.Listing.Price;
                 SellerId = src.Listing.UserId;
             }
             Category = src.Listing.Category?.Title;
             Seller = src.Listing.User?.FirstName + " " + src.Listing.User?.LastName;
-            TotalPaid = src.TotalPaid == 0 ? src.Listing.Price : src.TotalPaid;
+            Price = src.TotalPaid - src.Charges;
+            Charges = src.Charges;
+            TotalPaid = src.TotalPaid == 0 ? src.Listing.Price + src.Charges : src.TotalPaid;
         }
 
         public Guid Id { get; set; }
@@ -33,7 +34,7 @@ namespace MKTFY.Models.ViewModels
         public string Title { get; set; }
         public string Category { get; set; }
         public string ItemCondition { get; set; }
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
 
         // Seller
         public string SellerId { get; set; }
@@ -45,6 +46,7 @@ namespace MKTFY.Models.ViewModels
         public int OrderStatusId { get; set; }
         public string OrderStatus { get; set; }
         public decimal TotalPaid { get; set; }
+        public decimal Charges { get; set; }
         public DateTime Created { get; set; }
     }
 }

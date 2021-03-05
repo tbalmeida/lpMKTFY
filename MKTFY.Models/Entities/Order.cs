@@ -14,6 +14,8 @@ namespace MKTFY.Models.Entities
             BuyerId = src.BuyerId;
             Created = src.Created == null ? DateTime.UtcNow: src.Created;
             OrderStatusId = src.OrderStatusId;
+            Charges = src.Charges;
+            TotalPaid = src.TotalPaid;
         }
 
         [Key]
@@ -30,6 +32,8 @@ namespace MKTFY.Models.Entities
 
         [Required]
         public int OrderStatusId { get; set; }
+
+        public decimal Charges { get; set; }
 
         public decimal TotalPaid { get; set; }
 

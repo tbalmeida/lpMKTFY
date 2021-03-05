@@ -12,6 +12,8 @@ namespace MKTFY.Models.ViewModels
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
 
+        public decimal Charges { get; set; }
+
         public decimal TotalPaid { get; set; }
     }
 }

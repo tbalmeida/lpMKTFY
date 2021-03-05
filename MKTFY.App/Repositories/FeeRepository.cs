@@ -107,7 +107,6 @@ namespace MKTFY.App.Repositories
             });
 
             return Math.Round(result, 2);
-
         }
     }
 }

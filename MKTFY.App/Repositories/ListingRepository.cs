@@ -19,6 +19,7 @@ namespace MKTFY.App.Repositories
         private readonly IUserRepository _userRepository;
         private readonly IListingStatusRepository _listingStatusRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IFeeRepository _feeRepository;
 
         // Error message
         private readonly string _notFoundMsg = "Listing not found, please check the Id provided";
@@ -26,12 +27,14 @@ namespace MKTFY.App.Repositories
         public ListingRepository(ApplicationDbContext dbContext, 
             IUserRepository userRepository, 
             IListingStatusRepository listingStatusRepository,
-            IOrderRepository orderRepository)
+            IOrderRepository orderRepository,
+            IFeeRepository feeRepository)
         {
             _context = dbContext;
             _userRepository = userRepository;
             _listingStatusRepository = listingStatusRepository;
             _orderRepository = orderRepository;
+            _feeRepository = feeRepository;
         }
 
         public async Task<ListingVM> Create(ListingCreateVM src)
@@ -251,7 +254,8 @@ namespace MKTFY.App.Repositories
                 src.OrderStatusId = await ValidateState("Pending");
 
                 decimal thisPrice = await GetPrice(src.ListingId);
-                src.TotalPaid = await TotalPrice(thisPrice);
+                decimal totalFee = await _feeRepository.GetCharges(thisPrice);
+                src.TotalPaid = thisPrice + totalFee;
 
                 var thisOrder = await _orderRepository.Create(src);
 
@@ -304,24 +308,6 @@ namespace MKTFY.App.Repositories
                 throw new NotFoundException(_notFoundMsg, id.ToString());
 
             return result.Price;
-        }
-
-        public async Task<decimal> TotalPrice(decimal itemPrice)
-        {
-            var result = itemPrice;
-            var fees = await _context.Fees.Where(fee => fee.IsActive == true).ToListAsync();
-
-            fees.ForEach(item =>
-            {
-                if (item.IsPercentual)
-                {
-                    result += itemPrice * (item.Value / 100) > item.Cap ? (decimal)item.Cap : itemPrice * (item.Value / 100);
-                } else {
-                    result += item.Value;
-                }
-            });
-
-            return Math.Round(result, 2);
         }
     }
 }

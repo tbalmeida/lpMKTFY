@@ -17,6 +17,8 @@ namespace MKTFY.Models.ViewModels
 
         public DateTime Created { get; set; }
 
+        public decimal Charges { get; set; }
+
         public decimal TotalPaid { get; set; }
 
         [Required]
